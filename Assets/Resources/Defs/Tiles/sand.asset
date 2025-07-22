@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e02cdcd047cfb944b12876ac46f6020, type: 3}
+  m_Name: sand
+  m_EditorClassIdentifier: 
+  id: 0
+  label: 
+  material: {fileID: 2100000, guid: 5234de0fc4c3d0d47a592d334018c06a, type: 2}
+  walkable: 1
+  renderAsWall: 0
