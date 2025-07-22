@@ -2,27 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RegionNodes
-{
-    public List<Vector2> points = new();
-}
-
 public class NavManager : MonoBehaviour
 {
-    //Const
-    private const float HighNodeDensity = 10;
-
-    //Working vars
-    public Dictionary<Region, RegionNodes> nodesByRegions = new();
+    private bool[] nodes = new bool[100 * 100];
+    private GridIndexer indexer = new GridIndexer(100, 100);
 
     public void UpdateRegionNodes(Region region)
     {
-        if( !nodesByRegions.ContainsKey(region) )
-            nodesByRegions[region] = new();
-        
-        var nodes = nodesByRegions[region];
-
-        nodes.points.Clear();
         
         var min = region.rect.min;
         var max = region.rect.max;
@@ -42,42 +28,35 @@ public class NavManager : MonoBehaviour
         {
             for(var y = min.y; y < max.y; y++)
             {
-                var p = new Vector2(x + 0.5f, y + 0.5f);
+                var p = new Vector2Int(x, y);
 
-                if( RegionThingContainsPoint(region, p) )
+                var index = indexer.ToIndex(p);
+                
+                nodes[index] = false;
+
+                if( RegionThingContainsPoint(region, p.ToCenter()) )
                     continue;
 
-                nodes.points.Add(p);
+                nodes[index] = true;
             }
         }
-
-        for(var i = nodes.points.Count - 1; i >= 0; i--)
-        {
-            var nearThing = false;
-            foreach(var thing in region.thingLister.AllThings)
-            {
-                if( Vector2.Distance(GeomUtils.ClosestPointOnPolygon(nodes.points[i], thing.Corners), nodes.points[i]) < 2f )
-                {
-                    nearThing = true;
-                    break;
-                }
-            }
-
-            if( !nearThing )
-                nodes.points.RemoveAt(i);
-        }
-        
     }
 
     void OnDrawGizmos()
     {
-        foreach((Region region, RegionNodes nodes) in nodesByRegions)
+        if( nodes == null )
+            return;
+
+        Gizmos.color = Color.red;
+
+        for(var i = 0; i < nodes.Length; i++)
         {
-            foreach(var p in nodes.points)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(p, 0.2f);
-            }
+            if( !nodes[i] )
+                continue;
+            
+            var cell = indexer.ToCell(i);
+
+            Gizmos.DrawWireSphere(new Vector2(cell.x + 0.5f, cell.y + 0.5f), 0.25f);
         }
     }
 }

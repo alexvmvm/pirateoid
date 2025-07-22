@@ -25,4 +25,5 @@ public static class VectorExtensions
 
     public static Vector3 ToVector3(this Vector2 v) => new(v.x, v.y);
     public static Vector3 ToVector3(this Vector2Int v) => new(v.x, v.y);
+    public static Vector2 ToCenter(this Vector2Int v) => new(v.x + 0.5f, v.y + 0.5f);
 }
