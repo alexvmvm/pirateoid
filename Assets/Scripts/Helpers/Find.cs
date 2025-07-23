@@ -11,12 +11,20 @@ public static class Find
     public static SpriteManager SpriteManager   => GetObjectCached(ref spriteManager);
     public static RegionManager RegionManager   => GetObjectCached(ref regionManager);
     public static NavManager NavManager         => GetObjectCached(ref navManager);
+    public static CanvasScaler CanvasScaler     => GetObjectCached(ref canvasScaler);
+    public static GUIHandler GUIHandler         => GetObjectCached(ref guiHandler);
+    public static WindowManager WindowManager   => GetObjectCached(ref windowManager);
+    public static DebugTool DebugTool           => GetObjectCached(ref debugTool);
 
     //Private cache
     private static NavMeshManager navMeshManager;
     private static SpriteManager spriteManager;
     private static RegionManager regionManager;
     private static NavManager navManager;
+    private static CanvasScaler canvasScaler;
+    private static GUIHandler guiHandler;
+    private static WindowManager windowManager;
+    private static DebugTool debugTool;
 
     public static void Reset()
     {
@@ -24,6 +32,10 @@ public static class Find
         spriteManager = null;
         regionManager = null;
         navManager = null;
+        canvasScaler = null;
+        guiHandler = null;
+        windowManager = null;
+        debugTool = null;
     }
     
     

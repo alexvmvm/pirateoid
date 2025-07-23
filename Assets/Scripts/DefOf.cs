@@ -16,7 +16,7 @@ public static class DefOf
 
         if(!cachedDef.ContainsKey(key))
         {
-            cachedDef[key] = Resources.LoadAll<T>("Defs/Things/Buildings").FirstOrDefault(d => (typeName + "_" + d.name) == key);
+            cachedDef[key] = Resources.LoadAll<T>("Defs/Things").FirstOrDefault(d => (typeName + "_" + d.name) == key);
 
             if( cachedDef[key] == null )
                 UnityEngine.Debug.LogError("Failed to find def " + name);
@@ -37,7 +37,7 @@ public static class DefOf
 
 public static class ThingDefOf
 {
-    public static ThingDef Barricade;
+    public static ThingDef Pirate;
 
     static ThingDefOf()
     {

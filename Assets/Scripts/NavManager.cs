@@ -17,6 +17,9 @@ public class NavManager : MonoBehaviour
         {
             foreach(var thing in region.thingLister.AllThings)
             {
+                if( thing.def.traversability != Traversability.Impassable )
+                    continue;
+                
                 if( thing.Contains(p) )
                     return true;
             }
@@ -34,7 +37,7 @@ public class NavManager : MonoBehaviour
                 
                 nodes[index] = false;
 
-                if( RegionThingContainsPoint(region, p.ToCenter()) )
+                if( RegionThingContainsPoint(region, p.Center()) )
                     continue;
 
                 nodes[index] = true;
