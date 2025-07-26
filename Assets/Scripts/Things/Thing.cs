@@ -54,24 +54,9 @@ public class Thing
 
     public virtual void Move(Vector2 delta)
     {
-        var x = Mathf.FloorToInt(delta.x);
-        var y = Mathf.FloorToInt(delta.y);
-
         position += def.moveSpeed * Find.Ticker.TickInterval * delta;
 
-        var xAfter = Mathf.FloorToInt(delta.x);
-        var yAfter = Mathf.FloorToInt(delta.y);
-
-        // Moved cell
-        if( xAfter != x || yAfter != y )
-        {
-            // Optionally notify systems that care about movement.
-            Find.RegionManager.Notify_ThingMoved(this);
-            
-            //Find.NavMeshManager.Notify_ThingMoved(this);
-            //Find.SpriteManager.Notify_ThingMoved(this); 
-        }
-
+        Find.RegionManager.Notify_ThingMoved(this);
         
     }
 }
