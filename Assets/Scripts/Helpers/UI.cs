@@ -218,7 +218,10 @@ public static class UI
         if(rect.Contains(RootUI.MousePosition))
         {
             if( RootUI.MouseUp )
+            {
                 Event.current.Use();
+                return false;
+            }
 
             if( RootUI.MouseDown )
             {

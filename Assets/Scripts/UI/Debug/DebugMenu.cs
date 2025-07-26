@@ -23,11 +23,15 @@ public class DebugMenu : MonoBehaviour, IGUI
 
     public void DoGUI()
     {
-        var x = UIScreen.Width/2f - BtnWidth/2f;
+        var x = UIScreen.Width/2f - BtnWidth - (UI.Gap/2f);
         var y = 0;
 
         if( UI.Button(new Rect(x, y, BtnWidth, BtnHeight), "Debug actions") )
-            ToggleDebugWindow();
+            ToggleDebugOptionsWindow();
+        x += BtnWidth + UI.Gap;
+
+        if( UI.Button(new Rect(x, y, BtnWidth, BtnHeight), "Debug settings") )
+            ToggleDebugSettingsWindow();
         x += BtnWidth + UI.Gap;
         
         // if( UI.CheckboxWithLabel(new Rect(x, y, 45, BtnHeight), "God mode", Find.Debug.Enabled) )
@@ -39,12 +43,21 @@ public class DebugMenu : MonoBehaviour, IGUI
         //     ToggleAlgo();
     }
 
-    private void ToggleDebugWindow()
+    private void ToggleDebugOptionsWindow()
     {
         var window = Find.WindowManager.GetActiveWindow<Window_Debug_Options>() ;
         if( Find.WindowManager.GetActiveWindow<Window_Debug_Options>() != null )
             Find.WindowManager.Remove(window);
         else
             Find.WindowManager.Add(new Window_Debug_Options());
+    }
+
+    private void ToggleDebugSettingsWindow()
+    {
+        var window = Find.WindowManager.GetActiveWindow<Window_Debug_Settings>() ;
+        if( Find.WindowManager.GetActiveWindow<Window_Debug_Settings>() != null )
+            Find.WindowManager.Remove(window);
+        else
+            Find.WindowManager.Add(new Window_Debug_Settings());
     }
 }
