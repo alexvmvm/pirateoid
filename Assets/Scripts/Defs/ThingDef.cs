@@ -6,6 +6,13 @@ public enum Traversability
     Impassable
 }
 
+public enum ThingType
+{
+    Item,
+    Building,
+    Pawn
+}
+
 [CreateAssetMenu]
 public class ThingDef : Def
 {
@@ -14,4 +21,9 @@ public class ThingDef : Def
     public Sprite sprite;
     public float scale = 1f;
     public Traversability traversability;
+    public ThingType thingType;
+    public float moveSpeed = 2f;
+    
+    // Pawn
+    public bool playerControllable;
 }

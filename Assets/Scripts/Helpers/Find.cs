@@ -15,6 +15,9 @@ public static class Find
     public static GUIHandler GUIHandler         => GetObjectCached(ref guiHandler);
     public static WindowManager WindowManager   => GetObjectCached(ref windowManager);
     public static DebugTool DebugTool           => GetObjectCached(ref debugTool);
+    public static PlayerController PlayerController => GetObjectCached(ref playerController);
+    public static CameraController CameraController => GetObjectCached(ref cameraController);
+    public static Ticker Ticker                     => GetObjectCached(ref ticker);
 
     //Private cache
     private static NavMeshManager navMeshManager;
@@ -25,6 +28,9 @@ public static class Find
     private static GUIHandler guiHandler;
     private static WindowManager windowManager;
     private static DebugTool debugTool;
+    private static PlayerController playerController;
+    private static CameraController cameraController;
+    private static Ticker ticker;
 
     public static void Reset()
     {
@@ -36,6 +42,8 @@ public static class Find
         guiHandler = null;
         windowManager = null;
         debugTool = null;
+        playerController = null;
+        ticker = null;
     }
     
     

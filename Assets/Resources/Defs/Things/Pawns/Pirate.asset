@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Pirate
   m_EditorClassIdentifier: 
   label: pirate
+  thingType: 2
   size: {x: 1, y: 1}
   sprite: {fileID: 21300000, guid: 59695ae22d01d2347b5bb3c3de3b139f, type: 3}
   scale: 1

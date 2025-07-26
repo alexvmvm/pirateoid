@@ -175,10 +175,10 @@ public class NavMeshManager : MonoBehaviour
                 Gizmos.DrawLine(region.points[j], region.points[(j + 1) % region.points.Count]);
             }
             
-            #region  UNITY_EDITOR
+            #if UNITY_EDITOR
             var centroid = region.points.Centroid();
             UnityEditor.Handles.Label(centroid, region.id.ToString(), new GUIStyle() { normal = new GUIStyleState() { textColor = Color.black } });
-            #endregion
+            #endif
         }
 
         Gizmos.color = Color.green;
