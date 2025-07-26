@@ -56,7 +56,7 @@ public class SpriteManager : MonoBehaviour
         return mesh;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         foreach (var thing in things)
         {
