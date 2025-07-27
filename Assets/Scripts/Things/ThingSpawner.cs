@@ -10,9 +10,8 @@ public static class ThingSpawner
     }
 
     public static void SpawnThing(ThingDef def, Vector2 pos, float rotation = 0f)
-    {
+    {        
         var thing = ThingMaker.Make(def);
-
         SpawnThing(thing, pos, rotation);
     }
 }

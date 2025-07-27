@@ -77,10 +77,18 @@ public class SpriteManager : MonoBehaviour
                 new Vector4(r.width / tex.width, r.height / tex.height,
                             r.x     / tex.width,  r.y      / tex.height));
 
+            var rotation = Find.CameraController.Mode == CameraMode.Perspective ? 
+                Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up) :
+                Quaternion.Euler(0, 0, thing.rotation);
+
+            var offset = Find.CameraController.Mode == CameraMode.Perspective ? 
+                new Vector3(0, 0, - (def.size.y / 2f)) :
+                new Vector3();
+
             // 3. TRS: position & rotation from Thing; scale from Def.scale (size baked into mesh)
             var matrix = Matrix4x4.TRS(
-                new Vector3(thing.position.x, thing.position.y, 0f),
-                Quaternion.Euler(0, 0, thing.rotation),
+                new Vector3(thing.position.x, thing.position.y, 0f) + offset,
+                rotation,
                 Vector3.one * def.scale);
 
             Graphics.DrawMesh(mesh, matrix, spriteMaterial, 0, null, 0, mpb);

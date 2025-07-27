@@ -104,6 +104,12 @@ public class TileRenderer : MonoBehaviour
         }
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 1f);
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, 0, -5));
+    }
+
     void RenderBatches()
     {
         const int batchSize = 1023;

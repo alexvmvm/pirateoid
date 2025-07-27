@@ -120,4 +120,26 @@ public static class GeomUtils
         t = Mathf.Clamp01(t);
         return a + ab * t;
     }
+
+    public static bool RayPlaneIntersection(Vector3 rayOrigin, Vector3 rayDir, Vector3 planePoint, Vector3 planeNormal, out Vector3 hitPoint)
+    {
+        hitPoint = Vector3.zero;
+
+        float denom = Vector3.Dot(planeNormal, rayDir);
+        if (Mathf.Approximately(denom, 0f))
+        {
+            // Ray is parallel to the plane
+            return false;
+        }
+
+        float t = Vector3.Dot(planePoint - rayOrigin, planeNormal) / denom;
+        if (t < 0f)
+        {
+            // Intersection point is behind the ray origin
+            return false;
+        }
+
+        hitPoint = rayOrigin + rayDir * t;
+        return true;
+    }
 }

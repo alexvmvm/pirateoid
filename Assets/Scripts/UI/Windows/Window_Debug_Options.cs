@@ -75,9 +75,9 @@ public class Window_Debug_Options : Window
                 var spawn = new DebugAction($"Spawn {localDef.label}");
                 spawn.type = DebugActionType.MapClick;
                 spawn.action = () =>
-                {
-                    var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    ThingSpawner.SpawnThing(localDef, pos);
+                {                    
+                    if( RaycastUtils.UIToMapPosition(Input.mousePosition, out Vector3 pos) )
+                        ThingSpawner.SpawnThing(localDef, pos);                    
                 };
 
                 things.children.Add(spawn);
