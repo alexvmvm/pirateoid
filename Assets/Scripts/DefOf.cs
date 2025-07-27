@@ -38,6 +38,7 @@ public static class DefOf
 public static class ThingDefOf
 {
     public static ThingDef Pirate;
+    public static ThingDef Player;
 
     static ThingDefOf()
     {

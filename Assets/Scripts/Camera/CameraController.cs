@@ -41,7 +41,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void Start()
+    void Awake()
     {
         cam = GetComponent<Camera>(); // Get the Camera component attached to this GameObject
     }

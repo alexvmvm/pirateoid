@@ -82,7 +82,7 @@ public class SpriteManager : MonoBehaviour
                 Quaternion.Euler(0, 0, thing.rotation);
 
             var offset = Find.CameraController.Mode == CameraMode.Perspective ? 
-                new Vector3(0, 0, - (def.size.y / 2f)) :
+                Camera.main.transform.up * (def.size.y / 2f)  :
                 new Vector3();
 
             // 3. TRS: position & rotation from Thing; scale from Def.scale (size baked into mesh)
