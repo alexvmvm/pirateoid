@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum Traversability
@@ -17,12 +18,15 @@ public enum ThingType
 public class ThingDef : Def
 {
     public string label;
-    public Vector2Int size;
+    public Vector2 size;
     public Sprite sprite;
     public float scale = 1f;
     public Traversability traversability;
     public ThingType thingType;
     public float moveSpeed = 2f;
+    
+    [SerializeReference]
+    public List<CompProperties> comps = new();
     
     // Pawn
     public bool playerControllable;

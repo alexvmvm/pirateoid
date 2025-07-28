@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpriteManager : MonoBehaviour
 {
-    private static readonly Dictionary<Vector2Int, Mesh> quadCache = new();
+    private static readonly Dictionary<Vector2, Mesh> quadCache = new();
     private Material spriteMaterial;
     private readonly List<Thing> things = new();
     private MaterialPropertyBlock mpb;
@@ -24,7 +24,7 @@ public class SpriteManager : MonoBehaviour
         things.Remove(thing);
     }
 
-    private static Mesh GetQuad(Vector2Int size)
+    private static Mesh GetQuad(Vector2 size)
     {
         if (quadCache.TryGetValue(size, out var mesh)) 
             return mesh;
