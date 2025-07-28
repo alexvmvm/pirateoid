@@ -19,4 +19,13 @@ MonoBehaviour:
   traversability: 1
   thingType: 0
   moveSpeed: 2
+  comps:
+  - rid: 8109864279253188628
   playerControllable: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 8109864279253188628
+      type: {class: CompProperties_Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        damage: 1

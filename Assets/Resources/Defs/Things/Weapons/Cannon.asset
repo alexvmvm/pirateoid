@@ -20,12 +20,12 @@ MonoBehaviour:
   thingType: 0
   moveSpeed: 2
   comps:
-  - rid: 8109864279253188622
+  - rid: 8109864279253188627
   playerControllable: 0
   references:
     version: 2
     RefIds:
-    - rid: 8109864279253188622
-      type: {class: CompProperties_Flammable, ns: , asm: Assembly-CSharp}
+    - rid: 8109864279253188627
+      type: {class: CompProperties_Shooter, ns: , asm: Assembly-CSharp}
       data:
-        burnTime: 5
+        projectile: {fileID: 11400000, guid: bf656243d808651438c6bd43da091264, type: 2}

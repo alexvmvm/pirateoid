@@ -10,4 +10,11 @@ public abstract class CompProperties
 	{
 		this.compClass = compClass;
 	}
+
+    #if UNITY_EDITOR
+	public virtual void DrawEditorFields()
+    {
+        // Base class can draw common fields, or just be empty
+    }
+    #endif
 }

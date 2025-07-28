@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class CompProperties_Flammable : CompProperties
+public partial class CompProperties_Flammable : CompProperties
 {
     public float burnTime = 5f;
 
@@ -24,6 +24,15 @@ public class CompFlammable : ThingComp
 
     public override void Tick()
     {
-        Debug.Log("tick");
     }
 }
+
+#if UNITY_EDITOR
+public partial class CompProperties_Flammable
+{
+    public override void DrawEditorFields()
+    {
+        burnTime    = UnityEditor.EditorGUILayout.FloatField("Burn Time", burnTime);
+    }
+}
+#endif

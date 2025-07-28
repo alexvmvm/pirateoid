@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class Thing : ITickable
 {
@@ -67,10 +68,23 @@ public class Thing : ITickable
 
     public virtual void Move(Vector2 delta)
     {
+        var before = position.ToGroundCell();
+
         position += def.moveSpeed * Find.Ticker.TickInterval * delta;
 
-        Find.RegionManager.Notify_ThingMoved(this);
-        
+        if( before != position.ToGroundCell() )
+            Find.RegionManager.Notify_ThingMoved(this);
+    }
+
+    public T GetComp<T>() where T : ThingComp
+    {
+        for (int i = 0; i < comps.Count; i++)
+        {
+            if (comps[i] is T match)
+                return match;
+        }
+
+        return null;
     }
 
     public void InitializeComps()
@@ -102,6 +116,8 @@ public class Thing : ITickable
 
     public void Tick()
     {
+        Profiler.BeginSample("Thing.Tick");
+
         if( !comps.NullOrEmpty() )
         {
             for(var i = 0; i < comps.Count; i++)
@@ -109,5 +125,7 @@ public class Thing : ITickable
                 comps[i].Tick();
             }
         }
+
+        Profiler.EndSample();
     }
 }

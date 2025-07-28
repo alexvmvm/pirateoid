@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -48,12 +50,7 @@ public class ThingDefEditor : Editor
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.LabelField(comp?.GetType()?.Name.Replace("CompProperties_", ""), EditorStyles.boldLabel);
 
-            if (comp is CompProperties_Flammable flammable)
-            {
-                flammable.burnTime = EditorGUILayout.FloatField("Burn Time", flammable.burnTime);
-                flammable.burnTime = EditorGUILayout.FloatField("Burn Time", flammable.burnTime);
-                flammable.burnTime = EditorGUILayout.FloatField("Burn Time", flammable.burnTime);
-            }
+            comp.DrawEditorFields();
 
             if (GUILayout.Button("Remove"))
                 def.comps.RemoveAt(i);
@@ -64,7 +61,20 @@ public class ThingDefEditor : Editor
         if (GUILayout.Button("Add Component"))
         {
             GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Flammable"), false, () => def.comps.Add(new CompProperties_Flammable()));
+            
+            var compTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => typeof(CompProperties).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
+                .OrderBy(t => t.Name);
+
+            foreach (var type in compTypes)
+            {
+                menu.AddItem(new GUIContent(type.Name), false, () =>
+                {
+                    var instance = (CompProperties)Activator.CreateInstance(type);
+                    def.comps.Add(instance);
+                });
+            }
             menu.ShowAsContext();
         }
     }
