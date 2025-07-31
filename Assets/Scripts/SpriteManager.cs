@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,6 +54,22 @@ public class SpriteManager : MonoBehaviour
         return mesh;
     }
 
+    private static (Sprite sprite, bool flipped) GetSprite(Thing thing)
+    {
+        if( thing.def.thingType == ThingType.Pawn )
+        {
+            return thing.FacingDirection switch
+            {
+                FacingDirection.North   => (thing.def.spriteBack != null ? thing.def.spriteBack : thing.def.sprite, false),
+                FacingDirection.East    => (thing.def.spriteSide != null ? thing.def.spriteSide : thing.def.sprite, false),
+                FacingDirection.West    => (thing.def.spriteSide != null ? thing.def.spriteSide : thing.def.sprite, true),
+                _                       => (thing.def.sprite, false)
+            };
+        }
+
+        return (thing.def.sprite, false);
+    }
+
     private void Update()
     {
         var cam = Camera.main;
@@ -65,11 +80,14 @@ public class SpriteManager : MonoBehaviour
         foreach (var thing in things)
         {
             var def = thing.def;
-            if (def?.sprite == null) continue;
-
-            Vector3 thingPos = new Vector3(thing.position.x, thing.position.y, 0f);
-            Vector2 halfSize = def.size * 0.5f;
-            Bounds thingBounds = new Bounds(thingPos, new Vector3(def.size.x, def.size.y, 0.1f));
+            
+            (Sprite sprite, bool flipped) = GetSprite(thing);
+            
+            if( sprite == null )
+                continue;
+            
+            Vector3 thingPos    = new Vector3(thing.position.x, thing.position.y, 0f);
+            Bounds thingBounds  = new Bounds(thingPos, new Vector3(def.size.x, def.size.y, 0.1f));
 
             if (!camBounds.Intersects(thingBounds))
                 continue; // cull invisible sprite
@@ -78,10 +96,10 @@ public class SpriteManager : MonoBehaviour
 
             mpb ??= new();
             mpb.Clear();
-            mpb.SetTexture("_MainTex", def.sprite.texture);
+            mpb.SetTexture("_MainTex", sprite.texture);
 
-            var r = def.sprite.rect;
-            var tex = def.sprite.texture;
+            var r = sprite.rect;
+            var tex = sprite.texture;
             mpb.SetVector("_MainTex_ST",
                 new Vector4(r.width / tex.width, r.height / tex.height,
                             r.x     / tex.width,  r.y      / tex.height));
@@ -94,7 +112,10 @@ public class SpriteManager : MonoBehaviour
                 cam.transform.up * (def.size.y / 2f)  :
                 new Vector3();
 
-            var matrix = Matrix4x4.TRS(thingPos + offset, rotation, Vector3.one * def.scale);
+            var flipScale = flipped ? new Vector3(-1f, 1f, 1f) : Vector3.one;
+            var scale = Vector3.Scale(flipScale, Vector3.one * def.scale);
+            var matrix = Matrix4x4.TRS(thingPos + offset, rotation, scale);
+            
             Graphics.DrawMesh(mesh, matrix, spriteMaterial, 0, null, 0, mpb);
         }
     }

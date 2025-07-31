@@ -5,6 +5,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+public enum FacingDirection
+{
+    South,
+    East,
+    North,
+    West
+}
+
 public class Thing : ITickable
 {
     //Const
@@ -25,9 +33,11 @@ public class Thing : ITickable
     private int id;
     private List<Vector2> corners = new();
     public List<ThingComp> comps = new();
+    private FacingDirection facingDirection = FacingDirection.South;
 
     //Props
     public int UniqueId => id;
+    public FacingDirection FacingDirection => facingDirection;
     public List<Vector2> Corners
     {
         get
@@ -97,6 +107,17 @@ public class Thing : ITickable
             }
         }
         Profiler.EndSample();
+
+        if( def.thingType == ThingType.Pawn )
+        {
+            if( delta != Vector2.zero )
+            {
+                if( Mathf.Abs(delta.y) > Mathf.Abs(delta.x) )
+                    facingDirection = delta.y > 0 ? FacingDirection.North : FacingDirection.South;
+                else
+                    facingDirection = delta.x > 0 ? FacingDirection.East  : FacingDirection.West;
+            }
+        }
     }
 
     public T GetComp<T>() where T : ThingComp

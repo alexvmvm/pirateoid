@@ -38,6 +38,8 @@ public class ThingDefEditor : Editor
     private static void DoPawnFields(ThingDef def)
     {
         def.playerControllable = EditorGUILayout.Toggle("Player controllable", def.playerControllable);
+        def.spriteBack = (Sprite)EditorGUILayout.ObjectField("Sprite back", def.spriteBack, typeof(Sprite), false);
+        def.spriteSide = (Sprite)EditorGUILayout.ObjectField("Sprite side", def.spriteSide, typeof(Sprite), false);
     }
 
     private static void DoCompsField(ThingDef def)

@@ -13,8 +13,16 @@ MonoBehaviour:
   m_Name: Pirate
   m_EditorClassIdentifier: 
   label: pirate
-  thingType: 2
   size: {x: 1, y: 1}
   sprite: {fileID: 21300000, guid: 59695ae22d01d2347b5bb3c3de3b139f, type: 3}
   scale: 1
   traversability: 0
+  thingType: 2
+  moveSpeed: 2
+  comps: []
+  playerControllable: 0
+  spriteBack: {fileID: 21300000, guid: 6ec84f6743157cc419abaf6a75af7f9c, type: 3}
+  spriteSide: {fileID: 21300000, guid: 0406795313a9f894a890e2f8a5a617cd, type: 3}
+  references:
+    version: 2
+    RefIds: []

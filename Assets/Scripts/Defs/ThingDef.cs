@@ -30,4 +30,6 @@ public class ThingDef : Def
     
     // Pawn
     public bool playerControllable;
+    public Sprite spriteBack;
+    public Sprite spriteSide;
 }
