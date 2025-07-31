@@ -6,16 +6,15 @@ public class TileRenderer : MonoBehaviour
     public Mesh tileMesh;
     public TileDef sand;
     public TileDef water;
-
-    
     public int renderDistance = 20;
 
-    // Reused buffer to avoid GC
     private Dictionary<Material, List<Matrix4x4>> materialBatches = new();
+    private Camera mainCam;
 
     void Awake()
     {
         tileMesh = CreateQuadMesh();
+        mainCam = Camera.main;
     }
 
     private Mesh CreateQuadMesh()
@@ -45,25 +44,38 @@ public class TileRenderer : MonoBehaviour
         };
 
         mesh.RecalculateNormals();
-
         return mesh;
     }
 
     void Update()
     {
-        Vector3 camPos = Camera.main.transform.position;
+        if (mainCam == null)
+        {
+            mainCam = Camera.main;
+            if (mainCam == null)
+                return;
+        }
 
-        TileMap tileMap = Find.Map.tileMap;
+        TileMap tileMap = Find.TileMap;
+        materialBatches.Clear();
 
-        int minX = 0; //Mathf.Max(0, camTileX - renderDistance);
-        int maxX = tileMap.mapWidth; //Mathf.Min(tileMap.mapWidth - 1, camTileX + renderDistance);
-        int minY = 0; //Mathf.Max(0, camTileY - renderDistance);
-        int maxY = tileMap.mapHeight; //Mathf.Min(tileMap.mapHeight - 1, camTileY + renderDistance);
+        // Get camera view bounds in world space
+        Vector3 camPos  = mainCam.transform.position;
+        Vector2 camSize = CameraUtils.GetCameraViewSize(Camera.main);
+
+        float camHeight = camSize.y;
+        float camWidth  = camSize.x;
+
+        int maxCameraY = Mathf.CeilToInt(camPos.y + camHeight / 2f) + 1;
+        int maxCameraX = Mathf.CeilToInt(camPos.x + camWidth / 2f) + 1;
+
+        int minX = Mathf.Max(0, Mathf.FloorToInt(camPos.x - camWidth / 2f) - 1);
+        int maxX = Mathf.Min(tileMap.width - 1, maxCameraX);
+        int minY = Mathf.Max(0, Mathf.FloorToInt(camPos.y - camHeight / 2f) - 1);
+        int maxY = Mathf.Min(tileMap.height - 1, maxCameraY);
 
         for (TileLayer layer = TileLayer.Floor; layer < TileLayer.Count; layer++)
         {
-            materialBatches.Clear();
-
             for (int y = minY; y <= maxY; y++)
             {
                 for (int x = minX; x <= maxX; x++)
@@ -71,8 +83,8 @@ public class TileRenderer : MonoBehaviour
                     ref var tile = ref tileMap.GetTile(layer, x, y);
                     var def = TileDatabase.Get(tile.typeId);
                     var mat = def.material;
-                    
-                    if( mat == null )
+
+                    if (mat == null)
                         continue;
 
                     if (!materialBatches.TryGetValue(mat, out var list))
@@ -81,22 +93,20 @@ public class TileRenderer : MonoBehaviour
                         materialBatches[mat] = list;
                     }
 
-                    Vector3 pos = new Vector3(x, y, 0);
-                    if (layer == TileLayer.Wall) pos.z += 1; // elevate walls
-                    if (layer == TileLayer.Roof) pos.z += 2;
+                    float z = layer switch
+                    {
+                        TileLayer.Wall => 1f,
+                        TileLayer.Roof => 2f,
+                        _ => 0f
+                    };
 
-                    list.Add(Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one));
+                    list.Add(Matrix4x4.TRS(new Vector3(x, y, z), Quaternion.identity, Vector3.one));
                 }
             }
 
             RenderBatches();
+            materialBatches.Clear(); // clear per-layer to reduce memory use
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, 1f);
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, 0, -5));
     }
 
     void RenderBatches()
@@ -106,8 +116,8 @@ public class TileRenderer : MonoBehaviour
 
         foreach (var pair in materialBatches)
         {
-            Material mat = pair.Key;
-            List<Matrix4x4> matrices = pair.Value;
+            var mat = pair.Key;
+            var matrices = pair.Value;
 
             for (int i = 0; i < matrices.Count; i += batchSize)
             {

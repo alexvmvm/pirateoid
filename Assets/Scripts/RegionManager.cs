@@ -99,9 +99,6 @@ public class Region
 
 public class RegionManager : MonoBehaviour
 {
-    public int width = 100;
-    public int height = 100;
-
     //Const
     public const int RegionSize = 10;
 
@@ -129,6 +126,9 @@ public class RegionManager : MonoBehaviour
 
     void CheckRegionsCorrect()
     {
+        var width  = Find.TileMap.width;
+        var height = Find.TileMap.height;
+
         var xMin = Mathf.FloorToInt(0 / (float)RegionSize) * RegionSize;
         var yMin = Mathf.FloorToInt(0 / (float)RegionSize) * RegionSize;
         

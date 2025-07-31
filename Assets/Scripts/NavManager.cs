@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class NavManager : MonoBehaviour
 {
-    private bool[] nodes = new bool[100 * 100];
-    private GridIndexer indexer = new GridIndexer(100, 100);
+    private bool[] nodes;
+    private GridIndexer indexer;
 
     public void UpdateRegionNodes(Region region)
     {
-        
+        if( nodes == null )
+        {
+            var width  = Find.Map.width;
+            var height = Find.Map.height;
+
+            nodes = new bool[width * height];
+            indexer = new GridIndexer(width, height);
+        }
+
         var min = region.rect.min;
         var max = region.rect.max;
 

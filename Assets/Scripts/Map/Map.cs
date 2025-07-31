@@ -59,14 +59,14 @@ public class TileChunk
 
 public class TileMap
 {
-    public int mapWidth, mapHeight;
+    public int width, height;
     public int chunksX, chunksY;
     public TileChunk[,] chunks;
 
     public TileMap(int mapWidth, int mapHeight)
     {
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+        this.width = mapWidth;
+        this.height = mapHeight;
         chunksX = Mathf.CeilToInt((float)mapWidth / TileChunk.ChunkSize);
         chunksY = Mathf.CeilToInt((float)mapHeight / TileChunk.ChunkSize);
 
@@ -87,7 +87,7 @@ public class TileMap
 
     public void SetTile(TileLayer layer, int x, int y, TileDef def)
     {
-        if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+        if (x < 0 || y < 0 || x >= width || y >= height)
         {
             Debug.LogWarning($"SetTile out of bounds: ({x},{y})");
             return;
@@ -114,20 +114,31 @@ public class TileMap
 
 public class Map : MonoBehaviour
 {
-    public TileMap tileMap;
+    //Config
+    private TileMap tileMap;
+
     public int width = 100;
     public int height = 100;
 
-    void Awake()
+    //Props
+    public TileMap TileMap 
     {
-        tileMap = new TileMap(width, height);   
-
-        for(var x = 0; x < width; x++)
+        get
         {
-            for(var y = 0; y < height; y++)
+            if( tileMap == null )
             {
-                tileMap.SetTile(TileLayer.Floor, x, y, x < 6 + Random.Range(0, 4) ? TileDefOf.Water : TileDefOf.Sand);
+                tileMap = new(width, height);
+
+                for(var x = 0; x < width; x++)
+                {
+                    for(var y = 0; y < height; y++)
+                    {
+                        tileMap.SetTile(TileLayer.Floor, x, y, x < 6 + Random.Range(0, 4) ? TileDefOf.Water : TileDefOf.Sand);
+                    }
+                }
             }
+
+            return tileMap;
         }
     }
 }
