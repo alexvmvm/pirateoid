@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class NavManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class NavManager : MonoBehaviour
 
     public void UpdateRegionNodes(Region region)
     {
+        Profiler.BeginSample("UpdateRegionNodes");
+
         if( nodes == null )
         {
             var width  = Find.Map.width;
@@ -51,6 +54,8 @@ public class NavManager : MonoBehaviour
                 nodes[index] = true;
             }
         }
+
+        Profiler.EndSample();
     }
 
     void OnDrawGizmos()

@@ -27,7 +27,7 @@ public class CompShooter : ThingComp
 
     public override void Tick()
     {
-        if( Find.Ticker.TicksGame % 120 == 0 )
+        if( parent.IsHashInterval(120) )
         {
             var thing = ThingSpawner.SpawnThing(Props.projectile, parent.position);
             var projectile = thing.GetComp<CompProjectile>();

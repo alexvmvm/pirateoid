@@ -8,7 +8,6 @@ public static class Find
 {
     //Props
     public static Map Map                       => GetObjectCached(ref map);
-    public static TileMap TileMap               => Map.TileMap;
     public static SpriteManager SpriteManager   => GetObjectCached(ref spriteManager);
     public static RegionManager RegionManager   => GetObjectCached(ref regionManager);
     public static NavManager NavManager         => GetObjectCached(ref navManager);
@@ -19,6 +18,10 @@ public static class Find
     public static PlayerController PlayerController => GetObjectCached(ref playerController);
     public static CameraController CameraController => GetObjectCached(ref cameraController);
     public static Ticker Ticker                     => GetObjectCached(ref ticker);
+
+    //Props - misc
+    public static TileMap TileMap                   => Map.TileMap;
+    public static UniqueIdManager UniqueIdManager   => uniqueIdManager ??= new UniqueIdManager();
 
 
     //Private cache
@@ -33,6 +36,7 @@ public static class Find
     private static PlayerController playerController;
     private static CameraController cameraController;
     private static Ticker ticker;
+    private static UniqueIdManager uniqueIdManager;
 
     public static void Reset()
     {
@@ -46,6 +50,7 @@ public static class Find
         debugTool = null;
         playerController = null;
         ticker = null;
+        uniqueIdManager = null;
     }
     
     

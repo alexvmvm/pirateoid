@@ -22,10 +22,12 @@ public class Thing : ITickable
     public float rotation;
 
     //Working vars
+    private int id;
     private List<Vector2> corners = new();
     public List<ThingComp> comps = new();
 
     //Props
+    public int UniqueId => id;
     public List<Vector2> Corners
     {
         get
@@ -47,6 +49,8 @@ public class Thing : ITickable
 
     public void PostMake() 
     {
+        id = Find.UniqueIdManager.GetNextThingID();
+
         InitializeComps();
     }
     public void PostSpawn() 
@@ -54,13 +58,21 @@ public class Thing : ITickable
         Find.SpriteManager.Register(this);
         Find.RegionManager.Notify_ThingAdded(this);
         Find.PlayerController.Notify_ThingSpawned(this);
-
         Find.Ticker.Register(this);
     }
 
     public void PostDeSpawn()
     {
         Find.Ticker.DeRegister(this);
+        Find.SpriteManager.DeRegister(this);
+        Find.RegionManager.Notify_ThingRemoved(this);
+    }
+
+    public void Destroy()
+    {
+        // do some stuff
+
+        PostDeSpawn();
     }
 
     public bool Contains(Vector2 pos) => GeomUtils.PointInPolygon(pos, Corners);
@@ -71,8 +83,20 @@ public class Thing : ITickable
 
         position += def.moveSpeed * Find.Ticker.TickInterval * delta;
 
-        if( before != position.ToGroundCell() )
-            Find.RegionManager.Notify_ThingMoved(this);
+        var after = position.ToGroundCell();
+
+        Profiler.BeginSample("Thing.Move");
+        if( before != after )
+        {
+            if( after.InBounds() )
+                Find.RegionManager.Notify_ThingMoved(this);
+            else
+            {
+                if( !def.playerControllable )
+                    Destroy();
+            }
+        }
+        Profiler.EndSample();
     }
 
     public T GetComp<T>() where T : ThingComp

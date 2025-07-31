@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class Region
 {
@@ -39,16 +40,20 @@ public class Region
         if( !thingLister.Contains(thing) )
         {
             thingLister.Add(thing);
-            Find.NavManager.UpdateRegionNodes(this);
+
+            if( thing.def.thingType == ThingType.Building )
+                Find.NavManager.UpdateRegionNodes(this);
         }
     }
     
-    public void Remove(Thing gameObject)
+    public void Remove(Thing thing)
     {
-        if( thingLister.Contains(gameObject) )
+        if( thingLister.Contains(thing) )
         {
-            thingLister.Remove(gameObject);
-            Find.NavManager.UpdateRegionNodes(this);
+            thingLister.Remove(thing);
+            
+            if( thing.def.thingType == ThingType.Building )
+                Find.NavManager.UpdateRegionNodes(this);
         }
     }
 
@@ -153,10 +158,16 @@ public class RegionManager : MonoBehaviour
 
     public Region GetRegionOrNull(Vector2Int cell)
     {
+        Profiler.BeginSample("GetRegionOrNull");
+
         var regionCell = PositionToRegionCell(cell.x, cell.y);
         if( regionsByGridCell.ContainsKey(regionCell) )
+        {
+            Profiler.EndSample();
             return regionsByGridCell[regionCell];
+        }
             
+        Profiler.EndSample();
         return null;
     }
 
@@ -169,49 +180,70 @@ public class RegionManager : MonoBehaviour
 
     public void Notify_ThingAdded(Thing thing)
     {
-        var corners = thing.Corners;
+        Profiler.BeginSample("RegionManager.Notify_ThingAdded");
 
-        for(var i = 0; i < corners.Count; i++)
+        if( thing.def.thingType == ThingType.Building )
         {
-            var pos = corners[i];
+            var corners = thing.Corners;
 
-            Vector2Int cell = new(
-                Mathf.FloorToInt(pos.x), 
-                Mathf.FloorToInt(pos.y));
-
-            Region region = GetRegionOrNull(cell);
-            
-            region?.Add(thing);
-
-            var p1 = corners[i];
-            var p2 = corners[(i + 1) % corners.Count];
-
-            for(var j = 0; j < regions.Count; j++)
+            for(var i = 0; i < corners.Count; i++)
             {
-                var r = regions[j];
-                var rCorners = r.Corners;
+                var pos = corners[i];
 
-                for(var k = 0; k < corners.Count; k++)
+                Vector2Int cell = new(
+                    Mathf.FloorToInt(pos.x), 
+                    Mathf.FloorToInt(pos.y));
+
+                Region region = GetRegionOrNull(cell);
+                
+                region?.Add(thing);
+
+                var p1 = corners[i];
+                var p2 = corners[(i + 1) % corners.Count];
+
+                for(var j = 0; j < regions.Count; j++)
                 {
-                    var p3 = rCorners[k];
-                    var p4 = rCorners[(k + 1) % rCorners.Count];
+                    var r = regions[j];
+                    var rCorners = r.Corners;
 
-                    if( GeomUtils.LinesIntersect(p1, p2, p3, p4, out _, out _) )
+                    for(var k = 0; k < corners.Count; k++)
                     {
-                        r.Add(thing);
+                        var p3 = rCorners[k];
+                        var p4 = rCorners[(k + 1) % rCorners.Count];
+
+                        if( GeomUtils.LinesIntersect(p1, p2, p3, p4, out _, out _) )
+                        {
+                            r.Add(thing);
+                        }
                     }
                 }
             }
         }
+        else
+        {
+            Vector2Int cell = new(
+                Mathf.FloorToInt(thing.position.x), 
+                Mathf.FloorToInt(thing.position.y));
+
+            Region region = GetRegionOrNull(cell);
+            
+            region?.Add(thing);
+        }
+
+        Profiler.EndSample();
     }
 
     public void Notify_ThingRemoved(Thing thing)
     {
+        Profiler.BeginSample("RegionManager.Notify_ThingRemoved");
+
         for(var i = 0; i < regions.Count; i++)
         {
             if( regions[i].thingLister.Contains(thing) )
-                regions[i].thingLister.Remove(thing);
+                regions[i].Remove(thing);
         }
+
+        Profiler.EndSample();
     }
 
     public void Notify_ThingMoved(Thing thing)

@@ -1,0 +1,15 @@
+using System;
+using UnityEngine;
+
+public static class ThingUtils
+{
+    public static bool IsHashInterval(this Thing thing, int interval)
+    {
+        return (Find.Ticker.TicksGame + HashCode.Combine(thing.UniqueId, 6734986546)) % interval == 0;
+    }
+
+    public static bool IsHashInterval(int offset, int interval)
+    {
+        return (Find.Ticker.TicksGame + HashCode.Combine(offset, 6734986546)) % interval == 0;
+    }
+}
