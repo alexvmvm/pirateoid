@@ -52,7 +52,6 @@ public class Thing : ITickable
     public void PostSpawn() 
     {
         Find.SpriteManager.Register(this);
-        Find.NavMeshManager.Register(this);
         Find.RegionManager.Notify_ThingAdded(this);
         Find.PlayerController.Notify_ThingSpawned(this);
 

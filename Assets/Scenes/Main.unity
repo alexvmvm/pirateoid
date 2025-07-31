@@ -625,8 +625,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2028756949}
+  - component: {fileID: 2028756955}
   - component: {fileID: 2028756948}
-  - component: {fileID: 2028756950}
   - component: {fileID: 2028756954}
   - component: {fileID: 2028756951}
   - component: {fileID: 2028756952}
@@ -653,8 +653,6 @@ MonoBehaviour:
   tileMesh: {fileID: 0}
   sand: {fileID: 11400000, guid: 25bc5951b1bf914429b18f105be48a73, type: 2}
   water: {fileID: 11400000, guid: 3ee4f372794affd4789712ea720f212a, type: 2}
-  width: 100
-  height: 100
   renderDistance: 20
 --- !u!4 &2028756949
 Transform:
@@ -671,20 +669,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2028756950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2028756947}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7734345f5ed75ab4687ff1eefed83212, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  width: 100
-  height: 100
 --- !u!114 &2028756951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -735,6 +719,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7e5cc6befeaa004fad3a3a3a1860b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2028756955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028756947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 280bf38af81f4da4cb54a12f4ec63f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 100
+  height: 100
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -6,10 +6,8 @@ public class TileRenderer : MonoBehaviour
     public Mesh tileMesh;
     public TileDef sand;
     public TileDef water;
-    public int width = 100;
-    public int height = 100;
 
-    public TileMap tileMap;
+    
     public int renderDistance = 20;
 
     // Reused buffer to avoid GC
@@ -17,16 +15,7 @@ public class TileRenderer : MonoBehaviour
 
     void Awake()
     {
-        tileMap = new TileMap(width, height);
         tileMesh = CreateQuadMesh();
-
-        for(var x = 0; x < width; x++)
-        {
-            for(var y = 0; y < height; y++)
-            {
-                tileMap.SetTile(TileLayer.Floor, x, y, x < 6 + Random.Range(0, 4) ? water : sand);
-            }
-        }
     }
 
     private Mesh CreateQuadMesh()
@@ -63,13 +52,13 @@ public class TileRenderer : MonoBehaviour
     void Update()
     {
         Vector3 camPos = Camera.main.transform.position;
-        int camTileX = Mathf.FloorToInt(camPos.x);
-        int camTileY = Mathf.FloorToInt(camPos.z);
+
+        TileMap tileMap = Find.Map.tileMap;
 
         int minX = 0; //Mathf.Max(0, camTileX - renderDistance);
-        int maxX = width; //Mathf.Min(tileMap.mapWidth - 1, camTileX + renderDistance);
+        int maxX = tileMap.mapWidth; //Mathf.Min(tileMap.mapWidth - 1, camTileX + renderDistance);
         int minY = 0; //Mathf.Max(0, camTileY - renderDistance);
-        int maxY = height; //Mathf.Min(tileMap.mapHeight - 1, camTileY + renderDistance);
+        int maxY = tileMap.mapHeight; //Mathf.Min(tileMap.mapHeight - 1, camTileY + renderDistance);
 
         for (TileLayer layer = TileLayer.Floor; layer < TileLayer.Count; layer++)
         {

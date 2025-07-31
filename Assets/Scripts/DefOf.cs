@@ -16,7 +16,7 @@ public static class DefOf
 
         if(!cachedDef.ContainsKey(key))
         {
-            cachedDef[key] = Resources.LoadAll<T>("Defs/Things").FirstOrDefault(d => (typeName + "_" + d.name) == key);
+            cachedDef[key] = Resources.LoadAll<T>("Defs").FirstOrDefault(d => (typeName + "_" + d.name) == key);
 
             if( cachedDef[key] == null )
                 UnityEngine.Debug.LogError("Failed to find def " + name);
@@ -43,5 +43,16 @@ public static class ThingDefOf
     static ThingDefOf()
     {
         DefOf.FillReferences<ThingDef>(typeof(ThingDefOf));
+    }
+}
+
+public static class TileDefOf
+{
+    public static TileDef Water;
+    public static TileDef Sand;
+
+    static TileDefOf()
+    {
+        DefOf.FillReferences<TileDef>(typeof(TileDefOf));
     }
 }

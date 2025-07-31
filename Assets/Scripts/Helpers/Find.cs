@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public static class Find
 {
     //Props
-    public static NavMeshManager NavMeshManager => GetObjectCached(ref navMeshManager);
+    public static Map Map                       => GetObjectCached(ref map);
     public static SpriteManager SpriteManager   => GetObjectCached(ref spriteManager);
     public static RegionManager RegionManager   => GetObjectCached(ref regionManager);
     public static NavManager NavManager         => GetObjectCached(ref navManager);
@@ -20,7 +20,7 @@ public static class Find
     public static Ticker Ticker                     => GetObjectCached(ref ticker);
 
     //Private cache
-    private static NavMeshManager navMeshManager;
+    private static Map map;
     private static SpriteManager spriteManager;
     private static RegionManager regionManager;
     private static NavManager navManager;
@@ -34,7 +34,7 @@ public static class Find
 
     public static void Reset()
     {
-        navMeshManager = null;
+        map = null;
         spriteManager = null;
         regionManager = null;
         navManager = null;

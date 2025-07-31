@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,6 +6,15 @@ public struct Tile
     public int typeId;
     public byte elevation;
     public bool walkable;
+}
+
+public enum TileLayer : byte
+{
+    Floor = 0,
+    Wall = 1,
+    Roof = 2,
+    // Add more as needed
+    Count
 }
 
 public static class TileDatabase
@@ -33,22 +40,6 @@ public static class TileDatabase
 
         return All[id];
     }
-}
-
-public enum TileType
-{
-    None,
-    Floor,
-    Wall
-}
-
-public enum TileLayer : byte
-{
-    Floor = 0,
-    Wall = 1,
-    Roof = 2,
-    // Add more as needed
-    Count
 }
 
 public class TileChunk
@@ -118,8 +109,25 @@ public class TileMap
 
         chunk.Get(layer, localX, localY) = tile;
         chunk.dirty = true;
+    }
+}
 
-        if( !def.walkable )
-            Find.NavMeshManager.RegisterBlocker(new Rect(x, y, 1, 1));
+public class Map : MonoBehaviour
+{
+    public TileMap tileMap;
+    public int width = 100;
+    public int height = 100;
+
+    void Awake()
+    {
+        tileMap = new TileMap(width, height);   
+
+        for(var x = 0; x < width; x++)
+        {
+            for(var y = 0; y < height; y++)
+            {
+                tileMap.SetTile(TileLayer.Floor, x, y, x < 6 + Random.Range(0, 4) ? TileDefOf.Water : TileDefOf.Sand);
+            }
+        }
     }
 }
