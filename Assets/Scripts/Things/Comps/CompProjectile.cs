@@ -16,6 +16,7 @@ public partial class CompProperties_Projectile : CompProperties
 public class CompProjectile : ThingComp
 {
     private Vector2 direction;
+    private CompMoveable moveable;
 
     public CompProjectile(Thing parent) : base(parent)
     {
@@ -25,6 +26,13 @@ public class CompProjectile : ThingComp
 	{
 	}
 
+    public override void PostMake()
+    {
+        base.PostMake();
+
+        moveable = parent.GetComp<CompMoveable>();
+    }
+
     public void Fire(Vector2 direction)
     {
         this.direction = direction;
@@ -33,7 +41,7 @@ public class CompProjectile : ThingComp
     public override void Tick()
     {
         Profiler.BeginSample("CompProjectile.Tick");
-        parent.Move(direction); 
+        moveable.Move(direction); 
         Profiler.EndSample();
     }
 }

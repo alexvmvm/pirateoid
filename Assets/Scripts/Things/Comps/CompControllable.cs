@@ -14,6 +14,8 @@ public partial class CompProperties_Controllable : CompProperties
 public class CompControllable : ThingComp
 {
     private bool controlled = false;
+    
+    private CompMoveable moveable;
 
     public CompControllable(Thing parent) : base(parent)
     {
@@ -22,6 +24,13 @@ public class CompControllable : ThingComp
     public CompControllable(Thing parent, CompProperties props) : base(parent, props)
 	{
 	}
+
+    public override void PostMake()
+    {
+        base.PostMake();
+
+        moveable = parent.GetComp<CompMoveable>();
+    }
 
     public void SetControlled(bool control)
     {
@@ -35,16 +44,19 @@ public class CompControllable : ThingComp
 
     public void HandlePlayerInput()
     {
-        Vector2 move = Vector2.zero;
-
-        if (Input.GetKey(KeyCode.W)) move += Vector2.up;
-        if (Input.GetKey(KeyCode.S)) move += Vector2.down;
-        if (Input.GetKey(KeyCode.A)) move += Vector2.left;
-        if (Input.GetKey(KeyCode.D)) move += Vector2.right;
-
-        if (move != Vector2.zero)
+        if( moveable != null )
         {
-            parent.Move(move);
+            Vector2 move = Vector2.zero;
+
+            if (Input.GetKey(KeyCode.W)) move += Vector2.up;
+            if (Input.GetKey(KeyCode.S)) move += Vector2.down;
+            if (Input.GetKey(KeyCode.A)) move += Vector2.left;
+            if (Input.GetKey(KeyCode.D)) move += Vector2.right;
+
+            if (move != Vector2.zero)
+            {
+                moveable.Move(move);
+            }
         }
     }
 

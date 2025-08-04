@@ -5,14 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public enum FacingDirection
-{
-    South,
-    East,
-    North,
-    West
-}
-
 public class Thing : ITickable
 {
     //Const
@@ -33,11 +25,14 @@ public class Thing : ITickable
     private int id;
     private List<Vector2> corners = new();
     public List<ThingComp> comps = new();
-    private FacingDirection facingDirection = FacingDirection.South;
+    
+    //Comps
+    private CompMoveable moveable;
 
     //Props
     public int UniqueId => id;
-    public FacingDirection FacingDirection => facingDirection;
+    public CompMoveable CompMoveable => moveable;
+    public FacingDirection FacingDirection => CompMoveable != null ? CompMoveable.FacingDirection : default;
     public List<Vector2> Corners
     {
         get
@@ -62,6 +57,8 @@ public class Thing : ITickable
         id = Find.UniqueIdManager.GetNextThingID();
 
         InitializeComps();
+
+        moveable = GetComp<CompMoveable>();
     }
     public void PostSpawn() 
     {
@@ -86,39 +83,6 @@ public class Thing : ITickable
 
     public bool Contains(Vector2 pos) => GeomUtils.PointInPolygon(pos, Corners);
 
-    public virtual void Move(Vector2 delta)
-    {
-        var before = position.ToGroundCell();
-
-        position += def.moveSpeed * Find.Ticker.TickInterval * delta;
-
-        var after = position.ToGroundCell();
-
-        Profiler.BeginSample("Thing.Move");
-        if( before != after )
-        {
-            if( after.InBounds() )
-                Find.RegionManager.Notify_ThingMoved(this);
-            else
-            {
-                if( !Find.PlayerController.IsBeingControlled(this) )
-                    Destroy();
-            }
-        }
-        Profiler.EndSample();
-
-        if( def.thingType == ThingType.Pawn )
-        {
-            if( delta != Vector2.zero )
-            {
-                if( Mathf.Abs(delta.y) > Mathf.Abs(delta.x) )
-                    facingDirection = delta.y > 0 ? FacingDirection.North : FacingDirection.South;
-                else
-                    facingDirection = delta.x > 0 ? FacingDirection.East  : FacingDirection.West;
-            }
-        }
-    }
-
     public T GetComp<T>() where T : ThingComp
     {
         for (int i = 0; i < comps.Count; i++)
@@ -139,6 +103,9 @@ public class Thing : ITickable
 
 		for( int i = 0; i < def.comps.Count; i++ )
 			CreateAndAppendComponent(def.comps[i], comps);
+
+        for( int i = 0; i < comps.Count; i++ )
+            comps[i].PostMake();
 	}
 	
 	private void CreateAndAppendComponent(CompProperties properties, List<ThingComp> container)

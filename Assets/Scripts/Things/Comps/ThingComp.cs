@@ -19,6 +19,10 @@ public abstract class ThingComp
 		this.props = props;
 	}
 
+	public virtual void PostMake() 
+    {
+	}
+
     public virtual void Tick()
     {
         
