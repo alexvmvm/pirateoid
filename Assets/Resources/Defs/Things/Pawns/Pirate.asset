@@ -16,19 +16,27 @@ MonoBehaviour:
   size: {x: 1, y: 1}
   graphicData:
     sprite: {fileID: 21300000, guid: 59695ae22d01d2347b5bb3c3de3b139f, type: 3}
-    scale: 1
-  scale: 1
+    scale: 1.05
   traversability: 0
   thingType: 2
   moveSpeed: 2
-  comps: []
-  playerControllable: 0
+  comps:
+  - rid: 1264756240306405376
+  - rid: 1264756240306405377
+  playerControllable: 1
   graphicBack:
     sprite: {fileID: 21300000, guid: 6ec84f6743157cc419abaf6a75af7f9c, type: 3}
     scale: 1
   graphicSide:
     sprite: {fileID: 21300000, guid: 0406795313a9f894a890e2f8a5a617cd, type: 3}
-    scale: 1
+    scale: 0.9
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 1264756240306405376
+      type: {class: CompProperties_Container, ns: , asm: Assembly-CSharp}
+      data:
+        capacity: 10
+    - rid: 1264756240306405377
+      type: {class: CompProperties_Controllable, ns: , asm: Assembly-CSharp}
+      data: 

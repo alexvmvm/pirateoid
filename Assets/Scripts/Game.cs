@@ -9,6 +9,9 @@ public class Game : MonoBehaviour
     {
         Find.CameraController.Mode = CameraMode.Perspective;
 
-        ThingSpawner.SpawnThing(ThingDefOf.Player, new Vector2(50, 50));   
+        var player = ThingSpawner.SpawnThing(ThingDefOf.Pirate, new Vector2(50, 50));   
+        
+        player.GetComp<CompControllable>()
+            .SetControlled(true);
     }
 }

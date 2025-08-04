@@ -36,7 +36,6 @@ public class ThingDef : Def
     public List<CompProperties> comps = new();
     
     // Pawn
-    public bool playerControllable;
     public GraphicData graphicBack;
     public GraphicData graphicSide;
 }

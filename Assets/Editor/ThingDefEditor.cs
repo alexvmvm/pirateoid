@@ -36,15 +36,14 @@ public class ThingDefEditor : Editor
     
     private static void DoPawnFields(ThingDef def)
     {
-        def.playerControllable = EditorGUILayout.Toggle("Player controllable", def.playerControllable);
         DoGraphicDataFields("Graphics back", def.graphicBack);
         DoGraphicDataFields("Graphics side", def.graphicSide);
     }
 
     private static void DoGraphicDataFields(string label, GraphicData graphicData)
     {
-        EditorGUILayout.BeginVertical("box");
         EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        EditorGUILayout.BeginVertical("box");
         graphicData.sprite = (Sprite)EditorGUILayout.ObjectField("Sprite", graphicData.sprite, typeof(Sprite), false);
         graphicData.scale = EditorGUILayout.FloatField("Sprite scale", graphicData.scale);
         EditorGUILayout.EndVertical();

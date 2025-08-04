@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, ITickable
 {
-    public Thing current;
+    public CompControllable controllable;
 
     void OnEnable()
     {
@@ -16,39 +14,19 @@ public class PlayerController : MonoBehaviour, ITickable
         Find.Ticker.DeRegister(this);
     }
 
-    public void SetThing(Thing thing)
+    public void Set(CompControllable controllable)
     {
-        this.current = thing;
+        this.controllable = controllable;
 
-        Find.CameraController.Follow(thing);
+        Find.CameraController.Follow(controllable.parent);
     }
 
-    public void Notify_ThingSpawned(Thing thing)
-    {
-        if( current != null || thing.def.thingType != ThingType.Pawn || !thing.def.playerControllable )
-            return;
-
-        SetThing(thing);
-    }
+    public bool IsBeingControlled(Thing thing)
+        => controllable?.parent != null && controllable.parent == thing;
 
     public void Tick()
     {
-        if( current != null )
-            HandlePlayerInput();   
-    }
-
-    public void HandlePlayerInput()
-    {
-        Vector2 move = Vector2.zero;
-
-        if (Input.GetKey(KeyCode.W)) move += Vector2.up;
-        if (Input.GetKey(KeyCode.S)) move += Vector2.down;
-        if (Input.GetKey(KeyCode.A)) move += Vector2.left;
-        if (Input.GetKey(KeyCode.D)) move += Vector2.right;
-
-        if (move != Vector2.zero)
-        {
-            current.Move(move);
-        }
+        if( controllable != null )
+            controllable.HandlePlayerInput();   
     }
 }

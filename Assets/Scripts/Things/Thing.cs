@@ -67,7 +67,6 @@ public class Thing : ITickable
     {
         Find.SpriteManager.Register(this);
         Find.RegionManager.Notify_ThingAdded(this);
-        Find.PlayerController.Notify_ThingSpawned(this);
         Find.Ticker.Register(this);
     }
 
@@ -102,7 +101,7 @@ public class Thing : ITickable
                 Find.RegionManager.Notify_ThingMoved(this);
             else
             {
-                if( !def.playerControllable )
+                if( !Find.PlayerController.IsBeingControlled(this) )
                     Destroy();
             }
         }
