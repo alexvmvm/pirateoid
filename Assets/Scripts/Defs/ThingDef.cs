@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,13 +15,19 @@ public enum ThingType
     Pawn
 }
 
+[Serializable]
+public class GraphicData
+{
+    public Sprite sprite;
+    public float scale = 1f;
+}
+
 [CreateAssetMenu]
 public class ThingDef : Def
 {
     public string label;
     public Vector2 size;
-    public Sprite sprite;
-    public float scale = 1f;
+    public GraphicData graphicData;
     public Traversability traversability;
     public ThingType thingType;
     public float moveSpeed = 2f;
@@ -30,6 +37,6 @@ public class ThingDef : Def
     
     // Pawn
     public bool playerControllable;
-    public Sprite spriteBack;
-    public Sprite spriteSide;
+    public GraphicData graphicBack;
+    public GraphicData graphicSide;
 }

@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: cannon ball
   size: {x: 0.5, y: 0.5}
-  sprite: {fileID: 21300000, guid: 5942ac03b5240264db0016a81d159640, type: 3}
+  graphicData:
+    sprite: {fileID: 21300000, guid: 5942ac03b5240264db0016a81d159640, type: 3}
+    scale: 1
   scale: 1
   traversability: 1
   thingType: 0
@@ -22,6 +24,12 @@ MonoBehaviour:
   comps:
   - rid: 8109864279253188628
   playerControllable: 0
+  graphicBack:
+    sprite: {fileID: 0}
+    scale: 1
+  graphicSide:
+    sprite: {fileID: 0}
+    scale: 1
   references:
     version: 2
     RefIds:

@@ -14,9 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: barricade
   size: {x: 1, y: 2}
-  sprite: {fileID: 21300000, guid: 060967b07cea7804588954f0531f3616, type: 3}
+  graphicData:
+    sprite: {fileID: 21300000, guid: 060967b07cea7804588954f0531f3616, type: 3}
+    scale: 1
   scale: 1
   traversability: 1
   thingType: 1
   moveSpeed: 2
+  comps: []
   playerControllable: 0
+  graphicBack:
+    sprite: {fileID: 0}
+    scale: 1
+  graphicSide:
+    sprite: {fileID: 0}
+    scale: 1
+  references:
+    version: 2
+    RefIds: []

@@ -54,20 +54,20 @@ public class SpriteManager : MonoBehaviour
         return mesh;
     }
 
-    private static (Sprite sprite, bool flipped) GetSprite(Thing thing)
+    private static (Sprite sprite, bool flipped, float scale) GetSprite(Thing thing)
     {
         if( thing.def.thingType == ThingType.Pawn )
         {
             return thing.FacingDirection switch
             {
-                FacingDirection.North   => (thing.def.spriteBack != null ? thing.def.spriteBack : thing.def.sprite, false),
-                FacingDirection.East    => (thing.def.spriteSide != null ? thing.def.spriteSide : thing.def.sprite, false),
-                FacingDirection.West    => (thing.def.spriteSide != null ? thing.def.spriteSide : thing.def.sprite, true),
-                _                       => (thing.def.sprite, false)
+                FacingDirection.North   => (thing.def.graphicBack != null ? thing.def.graphicBack.sprite : thing.def.graphicData.sprite, false, thing.def.graphicBack.scale),
+                FacingDirection.East    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, false, thing.def.graphicSide.scale),
+                FacingDirection.West    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, true, thing.def.graphicSide.scale),
+                _                       => (thing.def.graphicData.sprite, false, thing.def.graphicData.scale)
             };
         }
 
-        return (thing.def.sprite, false);
+        return (thing.def.graphicData.sprite, false, thing.def.graphicData.scale);
     }
 
     private void Update()
@@ -81,7 +81,7 @@ public class SpriteManager : MonoBehaviour
         {
             var def = thing.def;
             
-            (Sprite sprite, bool flipped) = GetSprite(thing);
+            (Sprite sprite, bool flipped, float scale) = GetSprite(thing);
             
             if( sprite == null )
                 continue;
@@ -112,9 +112,10 @@ public class SpriteManager : MonoBehaviour
                 cam.transform.up * (def.size.y / 2f)  :
                 new Vector3();
 
-            var flipScale = flipped ? new Vector3(-1f, 1f, 1f) : Vector3.one;
-            var scale = Vector3.Scale(flipScale, Vector3.one * def.scale);
-            var matrix = Matrix4x4.TRS(thingPos + offset, rotation, scale);
+            var flipScale  = flipped ? new Vector3(-1f, 1f, 1f) : Vector3.one;
+            var finalScale = Vector3.Scale(flipScale, Vector3.one * scale);
+            
+            var matrix = Matrix4x4.TRS(thingPos + offset, rotation, finalScale);
             
             Graphics.DrawMesh(mesh, matrix, spriteMaterial, 0, null, 0, mpb);
         }

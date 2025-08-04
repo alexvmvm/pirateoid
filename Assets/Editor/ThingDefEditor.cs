@@ -13,8 +13,7 @@ public class ThingDefEditor : Editor
         // All
         def.label = EditorGUILayout.TextField("Label", def.label);
         def.size = EditorGUILayout.Vector2Field("Size", def.size);
-        def.sprite = (Sprite)EditorGUILayout.ObjectField("Sprite", def.sprite, typeof(Sprite), false);
-        def.scale = EditorGUILayout.FloatField("Scale", def.scale);
+        DoGraphicDataFields("Graphic", def.graphicData);
         def.traversability = (Traversability)EditorGUILayout.EnumPopup("Traversability", def.traversability);
         def.thingType = (ThingType)EditorGUILayout.EnumPopup("Thing type", def.thingType);
         def.moveSpeed = EditorGUILayout.FloatField("Move speed", def.moveSpeed);
@@ -38,8 +37,17 @@ public class ThingDefEditor : Editor
     private static void DoPawnFields(ThingDef def)
     {
         def.playerControllable = EditorGUILayout.Toggle("Player controllable", def.playerControllable);
-        def.spriteBack = (Sprite)EditorGUILayout.ObjectField("Sprite back", def.spriteBack, typeof(Sprite), false);
-        def.spriteSide = (Sprite)EditorGUILayout.ObjectField("Sprite side", def.spriteSide, typeof(Sprite), false);
+        DoGraphicDataFields("Graphics back", def.graphicBack);
+        DoGraphicDataFields("Graphics side", def.graphicSide);
+    }
+
+    private static void DoGraphicDataFields(string label, GraphicData graphicData)
+    {
+        EditorGUILayout.BeginVertical("box");
+        EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        graphicData.sprite = (Sprite)EditorGUILayout.ObjectField("Sprite", graphicData.sprite, typeof(Sprite), false);
+        graphicData.scale = EditorGUILayout.FloatField("Sprite scale", graphicData.scale);
+        EditorGUILayout.EndVertical();
     }
 
     private static void DoCompsField(ThingDef def)
