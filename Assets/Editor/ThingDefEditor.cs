@@ -14,15 +14,16 @@ public class ThingDefEditor : Editor
         def.label = EditorGUILayout.TextField("Label", def.label);
         def.size = EditorGUILayout.Vector2Field("Size", def.size);
         DoGraphicDataFields("Graphic", def.graphicData);
-        def.traversability = (Traversability)EditorGUILayout.EnumPopup("Traversability", def.traversability);
         def.thingType = (ThingType)EditorGUILayout.EnumPopup("Thing type", def.thingType);
-        def.moveSpeed = EditorGUILayout.FloatField("Move speed", def.moveSpeed);
 
         // Conditional fields
         switch( def.thingType )
         {
             case ThingType.Pawn:
                 DoPawnFields(def);
+            break;
+            case ThingType.Building:
+                DoBuildingFields(def);
             break;
         }
 
@@ -38,6 +39,13 @@ public class ThingDefEditor : Editor
     {
         DoGraphicDataFields("Graphics back", def.graphicBack);
         DoGraphicDataFields("Graphics side", def.graphicSide);
+
+        def.moveSpeed = EditorGUILayout.FloatField("Move speed", def.moveSpeed);
+    }
+
+    private static void DoBuildingFields(ThingDef def)
+    {
+        def.traversability = (Traversability)EditorGUILayout.EnumPopup("Traversability", def.traversability);
     }
 
     private static void DoGraphicDataFields(string label, GraphicData graphicData)

@@ -240,4 +240,15 @@ public static class RectUtils
 
     public static bool IsZero(this RectInt rect) 
         => rect.size == Vector2Int.zero;
+
+    /// <summary>
+    /// Returns the closest point inside the RectInt to the given point.
+    /// If the point is already inside the rect, it returns the point itself.
+    /// </summary>
+    public static Vector2Int ClosestPointInRect(this RectInt rect, Vector2Int point)
+    {
+        int clampedX = Mathf.Clamp(point.x, rect.xMin, rect.xMax - 1);
+        int clampedY = Mathf.Clamp(point.y, rect.yMin, rect.yMax - 1);
+        return new Vector2Int(clampedX, clampedY);
+    }
 }
