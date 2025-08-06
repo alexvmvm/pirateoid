@@ -10,7 +10,7 @@ public class SpriteManager : MonoBehaviour
 
     void Awake()
     {
-        spriteMaterial = new Material(Shader.Find("Sprites/Default"));
+        spriteMaterial = new Material(Shader.Find("Custom/UnlitSpriteTint"));
     }
 
     public void Register(Thing thing)
@@ -46,6 +46,13 @@ public class SpriteManager : MonoBehaviour
                 new Vector2(1,0),
                 new Vector2(1,1),
                 new Vector2(0,1)
+            },
+            colors = new[]
+            {
+                Color.white,
+                Color.white,
+                Color.white,
+                Color.white
             },
             triangles = new[] { 0, 1, 2, 2, 3, 0 }
         };
@@ -103,6 +110,8 @@ public class SpriteManager : MonoBehaviour
             mpb.SetVector("_MainTex_ST",
                 new Vector4(r.width / tex.width, r.height / tex.height,
                             r.x     / tex.width,  r.y      / tex.height));
+            
+            mpb.SetColor("_Color", Find.PlayerInput.IsUnderMouse(thing) ? Color.red : Color.white);
 
             var rotation = Find.CameraController.Mode == CameraMode.Perspective ? 
                 Quaternion.LookRotation(cam.transform.forward, Vector3.up) :
