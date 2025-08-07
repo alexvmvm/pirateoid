@@ -18,11 +18,20 @@ public static class RegionUtils
 
     public static bool VisibleToCamera(this Region region)
     {
-        var camera = Find.Camera;
+        var cam = Find.Camera;
+        
+        Vector2 min = region.rect.min;
+        Vector2 max = region.rect.max;
 
-        var rect = region.rect.ToRect();
-        var screenRect = rect.ToScreenRect(camera);
-    
-        return camera.CalculateCameraScreenRect().Overlaps(screenRect);
+        Vector3 bl = cam.WorldToScreenPoint(new Vector3(min.x, min.y, 0f));
+        Vector3 tr = cam.WorldToScreenPoint(new Vector3(max.x, max.y, 0f));
+
+        Rect screenRect = cam.CalculateCameraScreenRect();
+
+        // Return true if the region's screen rect intersects the camera's screen rect
+        bool xOverlap = bl.x < screenRect.xMax && tr.x > screenRect.xMin;
+        bool yOverlap = bl.y < screenRect.yMax && tr.y > screenRect.yMin;
+
+        return xOverlap && yOverlap;
     }
 }

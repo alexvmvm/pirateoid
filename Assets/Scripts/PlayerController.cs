@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour, ITickable
         Find.Ticker.DeRegister(this);
     }
 
+    public bool IsControlled(Thing thing)
+    {
+        return controllable?.parent == thing;
+    }
+
     public void Set(CompControllable controllable)
     {
         this.controllable = controllable;

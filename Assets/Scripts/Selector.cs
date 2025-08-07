@@ -4,11 +4,12 @@ using UnityEngine;
 public class Selector : MonoBehaviour
 {
     //Const
-    private const float Distance = 0.5f;
+    private const float CheckInterval = 0.05f; // 20 times per second
     
     //Working vars
     private static Thing thingUnderMouse;
     private List<Region> regionsVisible = new();
+    private float lastCheckTime = -1f;
 
     //Props
     public Thing ThingUnderMouse => thingUnderMouse;
@@ -18,13 +19,11 @@ public class Selector : MonoBehaviour
         {
             regionsVisible.Clear();
 
-            var camera = Find.Camera;
-            var bounds = camera.CalculateCameraScreenRect();
 
             var regions = Find.RegionManager.All;
             for(var i = 0; i < regions.Count; i++)
             {
-                if( bounds.Overlaps(regions[i].rect.ToRect().ToScreenRect(camera)) )
+                if( regions[i].VisibleToCamera() )
                     regionsVisible.Add(regions[i]);
             }
 
@@ -37,8 +36,15 @@ public class Selector : MonoBehaviour
         return thingUnderMouse == thing;
     }
 
-    // Update is called once per frame
-    void Update()
+    private bool CanEverSelect(Thing thing)
+    {
+        if( Find.PlayerController.IsControlled(thing) )
+            return false;
+        
+        return true;
+    }
+
+    private void CheckUpdateThingUnderMouse()
     {
         Vector3 mouse = Input.mousePosition;
 
@@ -52,6 +58,9 @@ public class Selector : MonoBehaviour
 
             for(var j = 0; j < things.Count; j++)
             {
+                if( !CanEverSelect(things[j]) )
+                    continue;
+                
                 if( things[j].DrawBounds.Contains(mouse) )
                 {
                     if( thingUnderMouse == null || thingUnderMouse.position.y > things[j].position.y )
@@ -59,5 +68,15 @@ public class Selector : MonoBehaviour
                 }
             }
         }
+    }
+
+    void Update()
+    {
+        if( Time.time - lastCheckTime < CheckInterval )
+            return;
+
+        lastCheckTime = Time.time;
+
+        CheckUpdateThingUnderMouse();
     }
 }
