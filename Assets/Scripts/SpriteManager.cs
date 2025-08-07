@@ -8,9 +8,13 @@ public class SpriteManager : MonoBehaviour
     private readonly List<Thing> things = new();
     private MaterialPropertyBlock mpb;
 
+    private static Material outlineMaterial;
+    private static MaterialPropertyBlock outlineMpb;
+
     void Awake()
     {
         spriteMaterial = new Material(Shader.Find("Custom/UnlitSpriteTint"));
+        outlineMaterial = new Material(Shader.Find("Custom/UnlitSpriteOutline"));
     }
 
     public void Register(Thing thing)
@@ -61,45 +65,41 @@ public class SpriteManager : MonoBehaviour
         return mesh;
     }
 
-    private static (Sprite sprite, bool flipped, float scale) GetSprite(Thing thing)
+    private static (Sprite sprite, bool flipped, float scale, float brightness) GetSprite(Thing thing)
     {
         if( thing.def.thingType == ThingType.Pawn )
         {
             return thing.FacingDirection switch
             {
-                FacingDirection.North   => (thing.def.graphicBack != null ? thing.def.graphicBack.sprite : thing.def.graphicData.sprite, false, thing.def.graphicBack.scale),
-                FacingDirection.East    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, false, thing.def.graphicSide.scale),
-                FacingDirection.West    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, true, thing.def.graphicSide.scale),
-                _                       => (thing.def.graphicData.sprite, false, thing.def.graphicData.scale)
+                FacingDirection.North   => (thing.def.graphicBack != null ? thing.def.graphicBack.sprite : thing.def.graphicData.sprite, false, thing.def.graphicBack.scale, thing.def.graphicBack.brightness),
+                FacingDirection.East    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, false, thing.def.graphicSide.scale, thing.def.graphicSide.brightness),
+                FacingDirection.West    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, true, thing.def.graphicSide.scale, thing.def.graphicSide.brightness),
+                _                       => (thing.def.graphicData.sprite, false, thing.def.graphicData.scale, thing.def.graphicData.brightness)
             };
         }
 
-        return (thing.def.graphicData.sprite, false, thing.def.graphicData.scale);
+        return (thing.def.graphicData.sprite, false, thing.def.graphicData.scale, thing.def.graphicData.brightness);
     }
 
     private void Update()
     {
-        var cam = Camera.main;
-        if (cam == null) return;
-
-        Bounds camBounds = CalculateCameraBounds(cam);
+        Rect camBounds = Find.Camera.CalculateCameraScreenRect();
 
         foreach (var thing in things)
         {
             var def = thing.def;
             
-            (Sprite sprite, bool flipped, float scale) = GetSprite(thing);
+            (Sprite sprite, bool flipped, float scale, float brightness) = GetSprite(thing);
             
             if( sprite == null )
                 continue;
             
-            Vector3 thingPos    = new Vector3(thing.position.x, thing.position.y, 0f);
-            Bounds thingBounds  = new Bounds(thingPos, new Vector3(def.size.x, def.size.y, 0.1f));
+            Rect thingBounds  = thing.DrawBounds;
 
-            if (!camBounds.Intersects(thingBounds))
+            if (!camBounds.Overlaps(thingBounds))
                 continue; // cull invisible sprite
 
-            var mesh  = GetQuad(def.size);
+            var mesh = GetQuad(def.size);
 
             mpb ??= new();
             mpb.Clear();
@@ -110,50 +110,35 @@ public class SpriteManager : MonoBehaviour
             mpb.SetVector("_MainTex_ST",
                 new Vector4(r.width / tex.width, r.height / tex.height,
                             r.x     / tex.width,  r.y      / tex.height));
-            
-            mpb.SetColor("_Color", Find.PlayerInput.IsUnderMouse(thing) ? Color.red : Color.white);
 
             var rotation = Find.CameraController.Mode == CameraMode.Perspective ? 
-                Quaternion.LookRotation(cam.transform.forward, Vector3.up) :
+                Quaternion.LookRotation(Find.Camera.transform.forward, Vector3.up) :
                 Quaternion.Euler(0, 0, thing.rotation);
-
-            var offset = Find.CameraController.Mode == CameraMode.Perspective ? 
-                cam.transform.up * (def.size.y / 2f)  :
-                new Vector3();
 
             var flipScale  = flipped ? new Vector3(-1f, 1f, 1f) : Vector3.one;
             var finalScale = Vector3.Scale(flipScale, Vector3.one * scale);
+
+            Color color = Color.white * brightness;
+
+            if( Find.Selector.IsSelectable(thing) )
+            {
+                float pulse = Mathf.Sin(Time.time * 6f) * 0.25f + 1.25f;
+                color *= pulse; // e.g. (1.25, 1.25, 1.25)
+
+                outlineMpb ??= new();
+                outlineMpb.SetTexture("_MainTex", sprite.texture);
+                outlineMpb.SetColor("_Color", new Color(1f, 1f, 1f, 0.6f));
+
+                var outlineScale = finalScale * 1.1f; // slightly larger
+                var outlineMatrix = Matrix4x4.TRS(thing.DrawPos, rotation, outlineScale);
+                Graphics.DrawMesh(mesh, outlineMatrix, outlineMaterial, 0, null, 0, outlineMpb);
+            }
             
-            var matrix = Matrix4x4.TRS(thingPos + offset, rotation, finalScale);
+            mpb.SetColor("_Color", color);
+
+            var matrix = Matrix4x4.TRS(thing.DrawPos, rotation, finalScale);
             
             Graphics.DrawMesh(mesh, matrix, spriteMaterial, 0, null, 0, mpb);
         }
-    }
-
-    private static Bounds CalculateCameraBounds(Camera cam)
-    {
-        Vector3[] corners = new Vector3[4];
-        cam.CalculateFrustumCorners(
-            new Rect(0, 0, 1, 1),
-            Mathf.Abs(cam.transform.position.z),
-            Camera.MonoOrStereoscopicEye.Mono,
-            corners);
-
-        Vector3 min = new Vector3(float.MaxValue, float.MaxValue, 0f);
-        Vector3 max = new Vector3(float.MinValue, float.MinValue, 0f);
-
-        for (int i = 0; i < 4; i++)
-        {
-            Vector3 world = cam.transform.TransformPoint(corners[i]);
-            min = Vector3.Min(min, world);
-            max = Vector3.Max(max, world);
-        }
-
-        // Pad slightly to avoid edge popping
-        const float padding = 1f;
-        min -= Vector3.one * padding;
-        max += Vector3.one * padding;
-
-        return new Bounds((min + max) * 0.5f, max - min);
     }
 }

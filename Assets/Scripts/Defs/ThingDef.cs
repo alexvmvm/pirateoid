@@ -20,6 +20,7 @@ public class GraphicData
 {
     public Sprite sprite;
     public float scale = 1f;
+    public float brightness = 1f;
 }
 
 [CreateAssetMenu]

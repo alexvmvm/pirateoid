@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class Selector : MonoBehaviour
 {
     private const float Distance = 0.5f;
     private static List<Thing> thingsUnderMouse = new();
 
-    public bool IsUnderMouse(Thing thing)
+    public bool IsSelectable(Thing thing)
     {
-        return thingsUnderMouse.Contains(thing);
+        return thing.DrawBounds.Contains(Input.mousePosition);
     }
 
     // Update is called once per frame
@@ -16,7 +16,9 @@ public class PlayerInput : MonoBehaviour
     {
         thingsUnderMouse.Clear();
 
-        if( RaycastUtils.UIToMapPosition(Input.mousePosition, out Vector3 hitPos) )
+        Vector3 mouse = Input.mousePosition;
+
+        if( RaycastUtils.UIToMapPosition(mouse, out Vector3 hitPos) )
         {
             foreach(var thing in ThingFinderUtils.GetNearbyThings(hitPos, Distance) )
             {

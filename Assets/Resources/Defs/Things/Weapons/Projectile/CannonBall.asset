@@ -17,6 +17,7 @@ MonoBehaviour:
   graphicData:
     sprite: {fileID: 21300000, guid: 5942ac03b5240264db0016a81d159640, type: 3}
     scale: 1
+    brightness: 2
   traversability: 1
   thingType: 0
   moveSpeed: 2
@@ -26,9 +27,11 @@ MonoBehaviour:
   graphicBack:
     sprite: {fileID: 0}
     scale: 1
+    brightness: 1
   graphicSide:
     sprite: {fileID: 0}
     scale: 1
+    brightness: 1
   references:
     version: 2
     RefIds:

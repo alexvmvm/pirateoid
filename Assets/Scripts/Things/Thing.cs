@@ -51,6 +51,53 @@ public class Thing : ITickable
             return corners;
         }
     }
+    public Vector3 DrawPos
+    {
+        get
+        {
+            var offset = Find.CameraController.Mode == CameraMode.Perspective ? 
+                Find.Camera.transform.up * (def.size.y / 2f)  :
+                new Vector3();
+
+            return new Vector3(position.x, position.y, 0f) + offset;
+        }
+    }
+    public Rect Bounds
+    {
+        get
+        {
+            Vector3 worldPos = new(DrawPos.x, DrawPos.y, 0f);
+
+            // Sprite bounds in world space
+            float halfWidth = def.size.x / 2f;
+            float halfHeight = def.size.y / 2f;
+
+            // Corners in world space (billboarded means flat facing camera)
+            Vector3 bottomLeft = worldPos + new Vector3(-halfWidth, -halfHeight, 0);
+            Vector3 topRight   = worldPos + new Vector3(halfWidth, halfHeight, 0);
+
+            return Rect.MinMaxRect(bottomLeft.x, bottomLeft.y, topRight.x, topRight.y);
+        }
+    }
+    public Rect DrawBounds
+    {
+        get
+        {
+            Rect bounds = Bounds;
+
+            // Project to screen space
+            Vector3 screenBL = Camera.main.WorldToScreenPoint(bounds.min);
+            Vector3 screenTR = Camera.main.WorldToScreenPoint(bounds.max);
+
+            return new Rect(
+                screenBL.x,
+                screenBL.y,
+                screenTR.x - screenBL.x,
+                screenTR.y - screenBL.y
+            );
+
+        }
+    }
 
     public void PostMake() 
     {

@@ -18,11 +18,12 @@ public static class Find
     public static PlayerController PlayerController => GetObjectCached(ref playerController);
     public static CameraController CameraController => GetObjectCached(ref cameraController);
     public static Ticker Ticker                     => GetObjectCached(ref ticker);
-    public static PlayerInput PlayerInput           => GetObjectCached(ref playerInput);
+    public static Selector Selector                 => GetObjectCached(ref selector);
 
     //Props - misc
     public static TileMap TileMap                   => Map.TileMap;
     public static UniqueIdManager UniqueIdManager   => uniqueIdManager ??= new UniqueIdManager();
+    public static Camera Camera                     => camera ??= Camera.main;
 
 
     //Private cache
@@ -38,7 +39,8 @@ public static class Find
     private static CameraController cameraController;
     private static Ticker ticker;
     private static UniqueIdManager uniqueIdManager;
-    private static PlayerInput playerInput;
+    private static Selector selector;
+    private static Camera camera;
 
     public static void Reset()
     {
@@ -53,7 +55,8 @@ public static class Find
         playerController = null;
         ticker = null;
         uniqueIdManager = null;
-        playerInput = null;
+        selector = null;
+        camera = null;
     }
     
     

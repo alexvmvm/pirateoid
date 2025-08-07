@@ -53,7 +53,8 @@ public class ThingDefEditor : Editor
         EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
         EditorGUILayout.BeginVertical("box");
         graphicData.sprite = (Sprite)EditorGUILayout.ObjectField("Sprite", graphicData.sprite, typeof(Sprite), false);
-        graphicData.scale = EditorGUILayout.FloatField("Sprite scale", graphicData.scale);
+        graphicData.scale = EditorGUILayout.FloatField("Scale", graphicData.scale);
+        graphicData.brightness = EditorGUILayout.FloatField("Brightness", graphicData.brightness);
         EditorGUILayout.EndVertical();
     }
 

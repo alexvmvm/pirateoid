@@ -17,19 +17,20 @@ MonoBehaviour:
   graphicData:
     sprite: {fileID: 21300000, guid: 6d57812af7229c341bfd794202a780ba, type: 3}
     scale: 1
-  scale: 1
+    brightness: 2
   traversability: 1
   thingType: 0
   moveSpeed: 2
   comps:
   - rid: 8109864279253188627
-  playerControllable: 0
   graphicBack:
     sprite: {fileID: 0}
     scale: 1
+    brightness: 1
   graphicSide:
     sprite: {fileID: 0}
     scale: 1
+    brightness: 1
   references:
     version: 2
     RefIds:

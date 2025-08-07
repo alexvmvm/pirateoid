@@ -27,4 +27,22 @@ public static class CameraUtils
             return new Vector2(width, height) * PerspectiveCameraExpandFactor;
         }
     }
+
+    public static Rect CalculateCameraScreenRect(this Camera cam)
+    {
+        // Bottom-left and top-right corners of the screen in pixels
+        Vector3 bottomLeft = new Vector3(0, 0, 0);
+        Vector3 topRight   = new Vector3(Screen.width, Screen.height, 0);
+
+        // Convert to same coordinate space (optional: clamp z to 0)
+        bottomLeft = cam.ScreenToViewportPoint(bottomLeft);
+        topRight   = cam.ScreenToViewportPoint(topRight);
+
+        float xMin = bottomLeft.x * Screen.width;
+        float yMin = bottomLeft.y * Screen.height;
+        float xMax = topRight.x * Screen.width;
+        float yMax = topRight.y * Screen.height;
+
+        return Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+    }
 }

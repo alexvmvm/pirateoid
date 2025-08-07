@@ -18,7 +18,7 @@ public static class ThingFinderUtils
 
                 for(var i = 0; i < things.Count; i++)
                 {
-                    if( Vector2.Distance(mapPos, things[i].position) < distance )
+                    if( Vector2.Distance(mapPos, things[i].DrawPos) < distance )
                     {
                         tmpThings.Add(things[i]);
                     }
