@@ -15,4 +15,14 @@ public static class RegionUtils
                 yield return r;
         }
     }
+
+    public static bool VisibleToCamera(this Region region)
+    {
+        var camera = Find.Camera;
+
+        var rect = region.rect.ToRect();
+        var screenRect = rect.ToScreenRect(camera);
+    
+        return camera.CalculateCameraScreenRect().Overlaps(screenRect);
+    }
 }

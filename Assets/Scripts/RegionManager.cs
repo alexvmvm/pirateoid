@@ -256,7 +256,8 @@ public class RegionManager : MonoBehaviour
     {
         foreach(var region in regionsByGridCell.Values)
         {
-            Gizmos.color = Color.yellow;
+            
+            Gizmos.color = region.VisibleToCamera() ? Color.green : Color.yellow;
             Gizmos.DrawWireCube(region.rect.center, region.rect.size.ToVector3());
 
             region.DrawGizmos();

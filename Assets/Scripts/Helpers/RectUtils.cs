@@ -57,6 +57,21 @@ public static class RectUtils
         return new Rect(t1.x, t1.y, t2.x - t1.x, t2.y - t1.y);
     }
 
+    public static Rect ToScreenRect(this Rect worldRect, Camera cam)
+    {
+        Vector3 bottomLeft = cam.WorldToScreenPoint(new Vector3(worldRect.xMin, worldRect.yMin, 0f));
+        Vector3 topRight   = cam.WorldToScreenPoint(new Vector3(worldRect.xMax, worldRect.yMax, 0f));
+
+        // In Unity screen space, Y increases from bottom to top.
+        // So make sure Y is normalized correctly.
+        float x = Mathf.Min(bottomLeft.x, topRight.x);
+        float y = Mathf.Min(bottomLeft.y, topRight.y);
+        float width  = Mathf.Abs(topRight.x - bottomLeft.x);
+        float height = Mathf.Abs(topRight.y - bottomLeft.y);
+
+        return new Rect(x, y, width, height);
+}
+
     public static IEnumerable<Vector2Int> EdgeCells(this RectInt rect)
     {
         int x = rect.xMin;
