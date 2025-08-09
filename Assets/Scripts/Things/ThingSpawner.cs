@@ -6,7 +6,7 @@ public static class ThingSpawner
     {
         thing.position = pos;
         thing.rotation = rotation;
-        thing.PostSpawn();
+        thing.Spawn();
         return thing;
     }
 

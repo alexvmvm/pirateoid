@@ -116,6 +116,9 @@ public class Selector : MonoBehaviour, IGUI
 
         UI.Label(rect, text);
         Text.Size = FontSize.Small;
+
+        if( RootUI.MouseDown )
+            interaction.action();
     }
 
     void Update()

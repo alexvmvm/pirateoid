@@ -5,6 +5,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+public enum SpawnState : byte
+{
+    Unspawned = 0,
+    Spawned   = 1
+}
+
 public class Thing : ITickable, IInteractable
 {
     //Const
@@ -25,12 +31,14 @@ public class Thing : ITickable, IInteractable
     private int id;
     private List<Vector2> corners = new();
     public List<ThingComp> comps = new();
+    private SpawnState spawnState;
     
     //Comps
     private CompMoveable moveable;
 
     //Props
     public int UniqueId => id;
+    public bool Spawned => spawnState == SpawnState.Spawned;
     public CompMoveable CompMoveable => moveable;
     public FacingDirection FacingDirection => CompMoveable != null ? CompMoveable.FacingDirection : default;
     public List<Vector2> Corners
@@ -106,16 +114,22 @@ public class Thing : ITickable, IInteractable
         InitializeComps();
 
         moveable = GetComp<CompMoveable>();
+        spawnState = SpawnState.Unspawned;
     }
-    public void PostSpawn() 
+
+    public void Spawn() 
     {
+        spawnState = SpawnState.Spawned;
+
         Find.SpriteManager.Register(this);
         Find.RegionManager.Notify_ThingAdded(this);
         Find.Ticker.Register(this);
     }
 
-    public void PostDeSpawn()
+    public void DeSpawn()
     {
+        spawnState = SpawnState.Unspawned;
+        
         Find.Ticker.DeRegister(this);
         Find.SpriteManager.DeRegister(this);
         Find.RegionManager.Notify_ThingRemoved(this);
@@ -125,7 +139,7 @@ public class Thing : ITickable, IInteractable
     {
         // do some stuff
 
-        PostDeSpawn();
+        DeSpawn();
     }
 
     public bool Contains(Vector2 pos) => GeomUtils.PointInPolygon(pos, Corners);
@@ -174,11 +188,14 @@ public class Thing : ITickable, IInteractable
     public IEnumerable<Interaction> GetInteractions(InteractionContext context)
     {
         // pawn picking something up
-        if( def.thingType == ThingType.Item && context.ActorIsPawn )
+        if( def.thingType == ThingType.Item 
+            && context.ActorIsPawn
+            && context.actor.GetComp<CompContainer>() is CompContainer container 
+            && container.CanAdd(this) )
         {
             yield return new Interaction() 
             {
-                action = () => {},
+                action = () => container.Add(this),
                 label = "Pick up"
             };
         }

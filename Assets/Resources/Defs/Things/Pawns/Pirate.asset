@@ -25,6 +25,7 @@ MonoBehaviour:
   - rid: 1264756240306405376
   - rid: 1264756240306405377
   - rid: 1264756240306405381
+  - rid: 1264756349467099136
   graphicBack:
     sprite: {fileID: 21300000, guid: 6ec84f6743157cc419abaf6a75af7f9c, type: 3}
     scale: 1
@@ -46,3 +47,7 @@ MonoBehaviour:
     - rid: 1264756240306405381
       type: {class: CompProperties_Moveable, ns: , asm: Assembly-CSharp}
       data: 
+    - rid: 1264756349467099136
+      type: {class: CompProperties_Container, ns: , asm: Assembly-CSharp}
+      data:
+        capacity: 10

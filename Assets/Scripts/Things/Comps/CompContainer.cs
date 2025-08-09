@@ -27,7 +27,17 @@ public class CompContainer : ThingComp
     public void Add(Thing thing)
     {
         if( !contents.Contains(thing) )
+        {            
+            if( thing.Spawned )
+                thing.DeSpawn();
+            
             contents.Add(thing);
+        }
+    }
+
+    public bool CanAdd(Thing thing)
+    {
+        return true;
     }
 
     public bool Remove(Thing thing)
