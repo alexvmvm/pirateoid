@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public static class FloodFillerUtils
+public static class FloodFiller
 {
     /// <summary>
     /// Performs a generic flood fill starting from a root node.

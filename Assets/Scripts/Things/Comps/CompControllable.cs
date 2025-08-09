@@ -16,6 +16,8 @@ public class CompControllable : ThingComp
     private bool controlled = false;
     
     private CompMoveable moveable;
+    private CompPathFollower pathFollower;
+    private CompPawnJobs jobs;
 
     public CompControllable(Thing parent) : base(parent)
     {
@@ -29,7 +31,9 @@ public class CompControllable : ThingComp
     {
         base.PostMake();
 
-        moveable = parent.GetComp<CompMoveable>();
+        moveable     = parent.GetComp<CompMoveable>();
+        pathFollower = parent.GetComp<CompPathFollower>();
+        jobs         = parent.GetComp<CompPawnJobs>();
     }
 
     public void SetControlled(bool control)
@@ -55,6 +59,12 @@ public class CompControllable : ThingComp
 
             if (move != Vector2.zero)
             {
+                if( pathFollower != null )
+                    pathFollower.Stop();
+
+                if( jobs != null )
+                    jobs.EndCurrentJob(failed: true);
+                
                 moveable.Move(move);
             }
         }

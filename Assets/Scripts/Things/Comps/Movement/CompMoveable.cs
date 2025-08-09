@@ -47,7 +47,7 @@ public class CompMoveable : ThingComp
         Profiler.BeginSample("Thing.Move");
         if( before != after )
         {
-            if( after.InBounds() )
+            if( after.InBounds(Find.Map) )
                 Find.RegionManager.Notify_ThingMoved(parent);
             else
             {

@@ -19,6 +19,8 @@ public static class Find
     public static CameraController CameraController => GetObjectCached(ref cameraController);
     public static Ticker Ticker                     => GetObjectCached(ref ticker);
     public static Selector Selector                 => GetObjectCached(ref selector);
+    public static ReservationManager Reservations   => GetObjectCached(ref reservations);
+    public static PathFinder PathFinder             => GetObjectCached(ref pathFinder);
 
     //Props - misc
     public static TileMap TileMap                   => Map.TileMap;
@@ -41,6 +43,8 @@ public static class Find
     private static UniqueIdManager uniqueIdManager;
     private static Selector selector;
     private static Camera camera;
+    private static ReservationManager reservations;
+    private static PathFinder pathFinder;
 
     public static void Reset()
     {
@@ -57,6 +61,8 @@ public static class Find
         uniqueIdManager = null;
         selector = null;
         camera = null;
+        reservations = null;
+        pathFinder = null;
     }
     
     

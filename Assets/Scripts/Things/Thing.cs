@@ -35,11 +35,15 @@ public class Thing : ITickable, IInteractable
     
     //Comps
     private CompMoveable moveable;
+    private CompPathFollower pathFollower;
+    private CompPawnJobs jobs;
 
     //Props
     public int UniqueId => id;
     public bool Spawned => spawnState == SpawnState.Spawned;
     public CompMoveable CompMoveable => moveable;
+    public CompPathFollower CompPathFollower => pathFollower;
+    public CompPawnJobs CompJobs => jobs;
     public FacingDirection FacingDirection => CompMoveable != null ? CompMoveable.FacingDirection : default;
     public List<Vector2> Corners
     {
@@ -113,8 +117,10 @@ public class Thing : ITickable, IInteractable
 
         InitializeComps();
 
-        moveable = GetComp<CompMoveable>();
-        spawnState = SpawnState.Unspawned;
+        moveable        = GetComp<CompMoveable>();
+        pathFollower    = GetComp<CompPathFollower>();
+        jobs            = GetComp<CompPawnJobs>();
+        spawnState      = SpawnState.Unspawned;
     }
 
     public void Spawn() 
@@ -195,7 +201,7 @@ public class Thing : ITickable, IInteractable
         {
             yield return new Interaction() 
             {
-                action = () => container.Add(this),
+                action = () => context.actor.CompJobs.StartJob(new Job_PickUp(context.actor, context.target)),
                 label = "Pick up"
             };
         }
