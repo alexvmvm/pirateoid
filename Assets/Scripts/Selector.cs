@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Selector : MonoBehaviour
+public class Selector : MonoBehaviour, IGUI
 {
     //Const
     private const float CheckInterval = 0.05f; // 20 times per second
@@ -10,9 +10,13 @@ public class Selector : MonoBehaviour
     private static Thing thingUnderMouse;
     private List<Region> regionsVisible = new();
     private float lastCheckTime = -1f;
+    private List<Interaction> interactions = new();
 
     //Props
     public Thing ThingUnderMouse => thingUnderMouse;
+
+    public int GUIOrder => GUIDrawOrder.Default;
+
     private List<Region> RegionsVisible
     {
         get
@@ -29,6 +33,16 @@ public class Selector : MonoBehaviour
 
             return regionsVisible;
         }
+    }
+
+    void OnEnable()
+    {
+        Find.GUIHandler.Register(this);
+    }
+
+    void OnDisable()
+    {
+        Find.GUIHandler.DeRegister(this);
     }
 
     public bool IsSelectable(Thing thing)
@@ -48,9 +62,10 @@ public class Selector : MonoBehaviour
     {
         Vector3 mouse = Input.mousePosition;
 
-        var regions = RegionsVisible;
+        List<Region> regions = RegionsVisible;
 
         thingUnderMouse = null;
+        interactions.Clear();
 
         for(var i = 0; i < regions.Count; i++)
         {
@@ -68,6 +83,39 @@ public class Selector : MonoBehaviour
                 }
             }
         }
+
+    
+        if( thingUnderMouse != null )
+        {
+            var actor = Find.PlayerController.ControlledThing;
+            if( actor != null )
+                interactions.AddRange(thingUnderMouse.GetAllInteractions(actor));
+        }   
+    }
+
+    public void DoGUI()
+    {
+        if( interactions.Count == 0 )
+            return;
+
+        Text.Size = FontSize.Large;
+        Text.Anchor = TextAnchor.UpperLeft;
+        
+        Interaction interaction = interactions[0];
+        string text = interaction.label;
+
+        Vector2 mousePosition = RootUI.MousePosition;
+        Vector2 size = Text.CalcSize(text);   
+        Vector2 offset = new Vector2(10, 0);
+        
+        Rect rect = new(
+            mousePosition.x + offset.x, 
+            mousePosition.y + offset.y, 
+            size.x, 
+            size.y);
+
+        UI.Label(rect, text);
+        Text.Size = FontSize.Small;
     }
 
     void Update()

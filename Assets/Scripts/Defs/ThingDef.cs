@@ -12,7 +12,8 @@ public enum ThingType
 {
     Item,
     Building,
-    Pawn
+    Pawn,
+    Projectile
 }
 
 [Serializable]

@@ -19,7 +19,7 @@ MonoBehaviour:
     scale: 1
     brightness: 2
   traversability: 1
-  thingType: 0
+  thingType: 3
   moveSpeed: 2
   comps:
   - rid: 8109864279253188628

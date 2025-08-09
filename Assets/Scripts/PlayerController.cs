@@ -4,6 +4,9 @@ public class PlayerController : MonoBehaviour, ITickable
 {
     public CompControllable controllable;
 
+    //Props
+    public Thing ControlledThing => controllable?.parent;
+
     void OnEnable()
     {
         Find.Ticker.Register(this);

@@ -2,7 +2,7 @@
 /// <summary>
 /// Higher means it receives gui events first.
 /// </summary>
-public static class GUIDepth
+public static class GUIDrawOrder
 {
     public const int Default = 0;
     public const int Window = 500;

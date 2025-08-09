@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public class Thing : ITickable
+public class Thing : ITickable, IInteractable
 {
     //Const
     private static readonly Vector2[] Extents =
@@ -170,6 +170,19 @@ public class Thing : ITickable
 		if (newComp != null)	
 			container.Add(newComp);
 	}
+
+    public IEnumerable<Interaction> GetInteractions(InteractionContext context)
+    {
+        // pawn picking something up
+        if( def.thingType == ThingType.Item && context.ActorIsPawn )
+        {
+            yield return new Interaction() 
+            {
+                action = () => {},
+                label = "Pick up"
+            };
+        }
+    }
 
     public void Tick()
     {
