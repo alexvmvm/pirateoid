@@ -202,8 +202,22 @@ public class Thing : ITickable, IInteractable
             yield return new Interaction() 
             {
                 action = () => context.actor.CompJobs.StartJob(new Job_PickUp(context.actor, context.target)),
-                label = "Pick up"
+                label = "Pick up " + context.target.def.label
             };
+        }
+
+        if( !comps.NullOrEmpty() )
+        {
+            for(int i = 0; i < comps.Count; i++)
+            {
+                if( comps[i] is IInteractable interactable)
+                {
+                    foreach(var interaction in interactable.GetInteractions(context) )
+                    {
+                        yield return interaction;
+                    }
+                }
+            }
         }
     }
 
