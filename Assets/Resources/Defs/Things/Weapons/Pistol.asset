@@ -42,5 +42,5 @@ MonoBehaviour:
     - rid: 1264756369848008705
       type: {class: CompProperties_Shooter, ns: , asm: Assembly-CSharp}
       data:
-        projectile: {fileID: 11400000, guid: bf656243d808651438c6bd43da091264, type: 2}
+        projectile: {fileID: 11400000, guid: 23af74cfc0510a54d99fa2d481a6899b, type: 2}
         speed: 1
