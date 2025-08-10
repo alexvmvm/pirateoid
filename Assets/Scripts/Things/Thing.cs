@@ -11,7 +11,7 @@ public enum SpawnState : byte
     Spawned   = 1
 }
 
-public class Thing : ITickable, IInteractable
+public class Thing : ITickable, IInteractable, IFrameUpdate
 {
     //Const
     private static readonly Vector2[] Extents =
@@ -155,6 +155,7 @@ public class Thing : ITickable, IInteractable
         Find.SpriteManager.Register(this);
         Find.RegionManager.Notify_ThingAdded(this);
         Find.Ticker.Register(this);
+        Find.FrameUpdate.Register(this);
     }
 
     public void DeSpawn()
@@ -164,6 +165,7 @@ public class Thing : ITickable, IInteractable
         Find.Ticker.DeRegister(this);
         Find.SpriteManager.DeRegister(this);
         Find.RegionManager.Notify_ThingRemoved(this);
+        Find.FrameUpdate.DeRegister(this);
     }
 
     public void Destroy()
@@ -254,6 +256,21 @@ public class Thing : ITickable, IInteractable
     internal void ClearOwner()
     {
         HeldContainer = null;
+    }
+
+    public void FrameUpdate()
+    {
+        Profiler.BeginSample("Thing.FrameUpdate");
+
+        if( !comps.NullOrEmpty() )
+        {
+            for(var i = 0; i < comps.Count; i++)
+            {
+                comps[i].FrameUpdate();
+            }
+        }
+
+        Profiler.EndSample();
     }
 
     public void Tick()

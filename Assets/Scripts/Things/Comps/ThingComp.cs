@@ -23,8 +23,18 @@ public abstract class ThingComp
     {
 	}
 
+	public virtual void TickBefore()
+	{
+		
+	}
+
     public virtual void Tick()
     {
         
     }
+
+	public virtual void FrameUpdate()
+	{
+		
+	}
 }

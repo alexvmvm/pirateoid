@@ -21,6 +21,7 @@ public static class Find
     public static Selector Selector                 => GetObjectCached(ref selector);
     public static ReservationManager Reservations   => GetObjectCached(ref reservations);
     public static PathFinder PathFinder             => GetObjectCached(ref pathFinder);
+    public static FrameUpdate FrameUpdate           => GetObjectCached(ref frameUpdate);
 
     //Props - misc
     public static TileMap TileMap                   => Map.TileMap;
@@ -45,6 +46,7 @@ public static class Find
     private static Camera camera;
     private static ReservationManager reservations;
     private static PathFinder pathFinder;
+    private static FrameUpdate frameUpdate;
 
     public static void Reset()
     {
@@ -63,6 +65,7 @@ public static class Find
         camera = null;
         reservations = null;
         pathFinder = null;
+        frameUpdate = null;
     }
     
     

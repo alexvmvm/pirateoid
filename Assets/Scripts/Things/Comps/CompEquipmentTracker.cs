@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public partial class CompProperties_EquipmentTracker : CompProperties
@@ -91,6 +92,7 @@ public class CompEquipmentTracker : ThingComp
 
     public override void Tick()
     {
+        
     }
 }
 
