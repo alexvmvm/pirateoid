@@ -38,3 +38,11 @@ MonoBehaviour:
       type: {class: CompProperties_Equipment, ns: , asm: Assembly-CSharp}
       data:
         slot: 1
+        equippedGraphicSide:
+          sprite: {fileID: 21300000, guid: 293fd983d41c4ac4a9fbb6d17c2e4561, type: 3}
+          scale: 1
+          brightness: 1
+        equippedGraphic:
+          sprite: {fileID: 21300000, guid: 293fd983d41c4ac4a9fbb6d17c2e4561, type: 3}
+          scale: 1
+          brightness: 1

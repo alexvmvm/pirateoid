@@ -44,6 +44,30 @@ public static class InventoryUIUtils
             GUI.color = Color.white * t.def.graphicData.brightness;
             UI.DrawTexture(r.ContractBy(UI.Gap), t.def.graphicData.sprite.texture, ScaleMode.ScaleToFit);
             GUI.color = Color.white;
+
+            if( RootUI.IsKeyDown(IntToKeyCode(key)) )
+            {
+                if( equipment.IsEquipped(t) )
+                    equipment.UnEquip(t);
+                else if( equipment.CanEquip(t, allowUnequip: true) )
+                    equipment.Equip(t);
+            }
         }
+    }
+
+    private static KeyCode IntToKeyCode(int keycode)
+    {
+        return keycode switch
+        {
+            1 => KeyCode.Alpha1,
+            2 => KeyCode.Alpha2,
+            3 => KeyCode.Alpha3,
+            4 => KeyCode.Alpha4,
+            5 => KeyCode.Alpha5,
+            6 => KeyCode.Alpha6,
+            7 => KeyCode.Alpha7,
+            8 => KeyCode.Alpha8,
+            _ => throw new System.NotImplementedException()
+        };
     }
 }

@@ -12,11 +12,11 @@ public partial class CompProperties_EquipmentTracker : CompProperties
 public class CompEquipmentTracker : ThingComp
 {
     //Working vars
-    private Thing equippedWeapon;
+    private CompEquipment equippedWeapon;
 
     //Props
     public CompProperties_EquipmentTracker Props => (CompProperties_EquipmentTracker)props;
-    public Thing EquippedWeapon => equippedWeapon;
+    public CompEquipment EquippedWeapon => equippedWeapon;
 
     public CompEquipmentTracker(Thing parent) : base(parent)
     {
@@ -26,7 +26,16 @@ public class CompEquipmentTracker : ThingComp
 	{
 	}
 
-    public bool CanEquip(Thing equipment, bool allowDropExisting = false)
+    public bool IsEquipped(Thing equipment)
+    {
+        var eq = equipment.GetComp<CompEquipment>();
+        if( eq == null )
+            return false;
+
+        return equippedWeapon == eq;
+    }
+
+    public bool CanEquip(Thing equipment, bool allowUnequip = false)
     {
         var eq = equipment.GetComp<CompEquipment>();
         if( eq == null )
@@ -34,7 +43,7 @@ public class CompEquipmentTracker : ThingComp
 
         if( eq.Props.slot == EquipmentSlot.Weapon 
             && equippedWeapon != null 
-            && !allowDropExisting )
+            && !allowUnequip )
         {
             return false;
         }
@@ -51,9 +60,7 @@ public class CompEquipmentTracker : ThingComp
         if( eq.Props.slot == EquipmentSlot.Weapon )
         {
             if( equippedWeapon != null )
-            {       
-                //do register equipped thing     
-            }
+                UnEquip(equippedWeapon.parent);
 
             var container = parent.GetComp<CompContainer>();
             if( container == null )
@@ -68,11 +75,19 @@ public class CompEquipmentTracker : ThingComp
             if( !container.Contains(equipment) )
                 container.Add(equipment);
 
-            equippedWeapon = equipment;
+            equippedWeapon = eq;
         }
         else
             throw new NotImplementedException();
     }
+
+    public void UnEquip(Thing thing)
+    {        
+        if( IsEquipped(thing) )
+        {
+            equippedWeapon = null;
+        }
+    }   
 
     public override void Tick()
     {

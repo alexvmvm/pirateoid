@@ -81,7 +81,7 @@ public class CompControllable : ThingComp
                 var weapon = equipment.EquippedWeapon;
                 if( weapon != null )
                 {   
-                    var shooter = weapon.GetComp<CompShooter>();
+                    var shooter = weapon.parent.GetComp<CompShooter>();
                     if( shooter != null )
                     {
                         if( RaycastUtils.UIToMapPosition(Input.mousePosition, out Vector3 clickPos) )

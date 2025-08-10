@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum EquipmentSlot
 {
@@ -11,6 +12,8 @@ public enum EquipmentSlot
 public partial class CompProperties_Equipment : CompProperties
 {
     public EquipmentSlot slot = default;
+    public GraphicData equippedGraphicSide;
+    public GraphicData equippedGraphic;
 
     public CompProperties_Equipment()
 	{
@@ -40,7 +43,18 @@ public partial class CompProperties_Equipment
 {
     public override void DrawEditorFields()
     {
-        slot = (EquipmentSlot)UnityEditor.EditorGUILayout.EnumPopup("Slot", slot);
+        DoGraphicDataFields("Equipped graphic", equippedGraphic);
+        DoGraphicDataFields("Equipped side graphic", equippedGraphicSide);
+    }
+
+    private static void DoGraphicDataFields(string label, GraphicData graphicData)
+    {
+        UnityEditor.EditorGUILayout.LabelField(label, UnityEditor.EditorStyles.boldLabel);
+        UnityEditor.EditorGUILayout.BeginVertical("box");
+        graphicData.sprite = (Sprite)UnityEditor.EditorGUILayout.ObjectField("Sprite", graphicData.sprite, typeof(Sprite), false);
+        graphicData.scale = UnityEditor.EditorGUILayout.FloatField("Scale", graphicData.scale);
+        graphicData.brightness = UnityEditor.EditorGUILayout.FloatField("Brightness", graphicData.brightness);
+        UnityEditor.EditorGUILayout.EndVertical();
     }
 }
 #endif

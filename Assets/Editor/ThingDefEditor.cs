@@ -56,7 +56,7 @@ public class ThingDefEditor : Editor
         def.moveSpeed = EditorGUILayout.FloatField("Move speed", def.moveSpeed);
     }
 
-    private static void DoGraphicDataFields(string label, GraphicData graphicData)
+    public static void DoGraphicDataFields(string label, GraphicData graphicData)
     {
         EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
         EditorGUILayout.BeginVertical("box");

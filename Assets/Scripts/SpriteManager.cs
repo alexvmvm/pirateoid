@@ -65,80 +65,156 @@ public class SpriteManager : MonoBehaviour
         return mesh;
     }
 
-    private static (Sprite sprite, bool flipped, float scale, float brightness) GetSprite(Thing thing)
+    // Picks the correct GraphicData for this thing/facing and whether it should be flipped.
+    private static (GraphicData data, bool flipped) GetGraphicDataFor(Thing thing)
     {
-        if( thing.def.thingType == ThingType.Pawn )
-        {
-            return thing.FacingDirection switch
-            {
-                FacingDirection.North   => (thing.def.graphicBack != null ? thing.def.graphicBack.sprite : thing.def.graphicData.sprite, false, thing.def.graphicBack.scale, thing.def.graphicBack.brightness),
-                FacingDirection.East    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, false, thing.def.graphicSide.scale, thing.def.graphicSide.brightness),
-                FacingDirection.West    => (thing.def.graphicSide != null ? thing.def.graphicSide.sprite : thing.def.graphicData.sprite, true, thing.def.graphicSide.scale, thing.def.graphicSide.brightness),
-                _                       => (thing.def.graphicData.sprite, false, thing.def.graphicData.scale, thing.def.graphicData.brightness)
-            };
-        }
+        var def = thing.def;
 
-        return (thing.def.graphicData.sprite, false, thing.def.graphicData.scale, thing.def.graphicData.brightness);
+        if (def.thingType != ThingType.Pawn)
+            return (def.graphicData, false);
+
+        switch (thing.FacingDirection)
+        {
+            case FacingDirection.North:
+            {
+                var data = def.graphicBack ?? def.graphicData;
+                return (data, false);
+            }
+            case FacingDirection.East:
+            {
+                var data = def.graphicSide ?? def.graphicData;
+                return (data, false);
+            }
+            case FacingDirection.West:
+            {
+                var data = def.graphicSide ?? def.graphicData; // fallback-safe
+                return (data, true); // keep west-flip behavior
+            }
+            default:
+                return (def.graphicData, false);
+        }
+    }
+
+    private static (GraphicData data, bool flipped) GetGraphicDataFor(FacingDirection facingDirection, CompEquipment equipment)
+    {
+        switch (facingDirection)
+        {
+            case FacingDirection.North:
+                return (equipment.Props.equippedGraphic, false);
+            case FacingDirection.East:
+                return (equipment.Props.equippedGraphicSide, false);
+            case FacingDirection.West:
+                return (equipment.Props.equippedGraphic, true); // keep west-flip behavior
+            default:
+                return (equipment.Props.equippedGraphic, false);
+        }
     }
 
     private void Update()
     {
         Rect camBounds = Find.Camera.CalculateCameraScreenRect();
 
+        mpb ??= new();
+
         foreach (var thing in things)
         {
-            var def = thing.def;
-            
-            (Sprite sprite, bool flipped, float scale, float brightness) = GetSprite(thing);
-            
-            if( sprite == null )
-                continue;
-            
             Rect thingBounds  = thing.DrawBounds;
 
             if (!camBounds.Overlaps(thingBounds))
                 continue; // cull invisible sprite
-
-            var mesh = GetQuad(def.size);
-
-            mpb ??= new();
-            mpb.Clear();
-            mpb.SetTexture("_MainTex", sprite.texture);
-
-            var r = sprite.rect;
-            var tex = sprite.texture;
-            mpb.SetVector("_MainTex_ST",
-                new Vector4(r.width / tex.width, r.height / tex.height,
-                            r.x     / tex.width,  r.y      / tex.height));
-
-            var rotation = Find.CameraController.Mode == CameraMode.Perspective ? 
-                Quaternion.LookRotation(Find.Camera.transform.forward, Vector3.up) :
-                Quaternion.Euler(0, 0, thing.rotation);
-
-            var flipScale  = flipped ? new Vector3(-1f, 1f, 1f) : Vector3.one;
-            var finalScale = Vector3.Scale(flipScale, Vector3.one * scale);
-
-            Color color = Color.white * brightness;
-
-            if( Find.Selector.IsSelectable(thing) )
-            {
-                float pulse = Mathf.Sin(Time.time * 6f) * 0.25f + 1.25f;
-                color *= pulse; // e.g. (1.25, 1.25, 1.25)
-
-                outlineMpb ??= new();
-                outlineMpb.SetTexture("_MainTex", sprite.texture);
-                outlineMpb.SetColor("_Color", new Color(1f, 1f, 1f, 0.6f));
-
-                var outlineScale = finalScale * 1.1f; // slightly larger
-                var outlineMatrix = Matrix4x4.TRS(thing.DrawPos, rotation, outlineScale);
-                Graphics.DrawMesh(mesh, outlineMatrix, outlineMaterial, 0, null, 0, outlineMpb);
-            }
-            
-            mpb.SetColor("_Color", color);
-
-            var matrix = Matrix4x4.TRS(thing.DrawPos, rotation, finalScale);
-            
-            Graphics.DrawMesh(mesh, matrix, spriteMaterial, 0, null, 0, mpb);
+                
+            DrawThing(thing, mpb, spriteMaterial);
         }
+    }
+
+    private static void DrawThing(Thing thing, MaterialPropertyBlock mpb, Material spriteMaterial)
+    {            
+        (GraphicData data, bool flipped) = GetGraphicDataFor(thing);
+        
+        if( data?.sprite == null )
+            return;
+
+        bool selected = Find.Selector.IsSelectable(thing);
+
+        DrawSprite(data.sprite, thing.DrawPos, thing.rotation, data.scale, thing.def.size, mpb, spriteMaterial, flipped, data.brightness, 
+            selected: selected);
+
+        // draw equipped weapon
+        if( thing.CompEquipmentTracker != null )
+        {
+            var weaponEq = thing.CompEquipmentTracker.EquippedWeapon;
+            if( weaponEq != null )
+            {
+                Thing weapon = weaponEq.parent;
+
+                (GraphicData weaponData, bool _) = GetGraphicDataFor(thing.FacingDirection, weaponEq);
+
+                Vector3 weaponPos = GetEquipmentOffset(weaponEq, thing.DrawPos, thing.FacingDirection);           
+
+                DrawSprite(weaponData.sprite, weaponPos, thing.rotation, weaponData.scale, weapon.def.size, mpb, spriteMaterial, flipped, weaponData.brightness);
+            }
+        }
+    }
+
+    private static Vector3 GetEquipmentOffset(CompEquipment equipment, Vector3 drawPos, FacingDirection facingDirection)
+    {
+        Vector3 eqOffset = Find.Camera.transform.forward * 0.0002f;
+
+        // z offset
+        drawPos += facingDirection == FacingDirection.North ? eqOffset : -eqOffset;  
+
+        // direction
+        drawPos += facingDirection switch
+        {
+            FacingDirection.East => new Vector3(0.15f, -0.1f, 0f),
+            FacingDirection.West => new Vector3(-0.15f, -0.1f, 0f),
+            _                    => Vector3.zero
+        };
+
+        return drawPos;
+    }
+
+    private static void DrawSprite(Sprite sprite, Vector3 drawPos, float rot, float scale, Vector2 size, 
+        MaterialPropertyBlock mpb, Material material, bool flipped, float brightness = 1f, bool selected = false)
+    {
+        Mesh mesh = GetQuad(size);
+        Texture2D texture = sprite.texture;
+        Rect textRect = sprite.rect;
+
+        mpb.Clear();
+        mpb.SetTexture("_MainTex", texture);
+
+        mpb.SetVector("_MainTex_ST",
+            new Vector4(textRect.width / texture.width, textRect.height / texture.height,
+                        textRect.x     / texture.width,  textRect.y      / texture.height));
+
+        Quaternion rotation = Find.CameraController.Mode == CameraMode.Perspective ? 
+            Quaternion.LookRotation(Find.Camera.transform.forward, Vector3.up) :
+            Quaternion.Euler(0, 0, rot);
+
+        Vector3 flipScale  = flipped ? new Vector3(-1f, 1f, 1f) : Vector3.one;
+        Vector3 finalScale = Vector3.Scale(flipScale, Vector3.one * scale);
+
+        Color color = Color.white * brightness;
+
+        if( selected )
+        {
+            float pulse = Mathf.Sin(Time.time * 6f) * 0.25f + 1.25f;
+            color *= pulse; // e.g. (1.25, 1.25, 1.25)
+
+            outlineMpb ??= new();
+            outlineMpb.SetTexture("_MainTex", texture);
+            outlineMpb.SetColor("_Color", new Color(1f, 1f, 1f, 0.6f));
+
+            var outlineScale = finalScale * 1.1f; // slightly larger
+            var outlineMatrix = Matrix4x4.TRS(drawPos, rotation, outlineScale);
+            Graphics.DrawMesh(mesh, outlineMatrix, outlineMaterial, 0, null, 0, outlineMpb);
+        }
+        
+        mpb.SetColor("_Color", color);
+
+        var matrix = Matrix4x4.TRS(drawPos, rotation, finalScale);
+        
+        Graphics.DrawMesh(mesh, matrix, material, 0, null, 0, mpb);
     }
 }

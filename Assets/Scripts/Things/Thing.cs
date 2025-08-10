@@ -78,6 +78,7 @@ public class Thing : ITickable, IInteractable
             return new Vector3(position.x, position.y, 0f) + offset;
         }
     }
+    
     public Rect Bounds
     {
         get
