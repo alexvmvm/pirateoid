@@ -37,6 +37,8 @@ public class Thing : ITickable, IInteractable
     private CompMoveable moveable;
     private CompPathFollower pathFollower;
     private CompPawnJobs jobs;
+    private CompEquipmentTracker equipmentTracker;
+    private CompContainer container;
 
     //Props
     public int UniqueId => id;
@@ -44,6 +46,8 @@ public class Thing : ITickable, IInteractable
     public CompMoveable CompMoveable => moveable;
     public CompPathFollower CompPathFollower => pathFollower;
     public CompPawnJobs CompJobs => jobs;
+    public CompContainer CompContainer => container;
+    public CompEquipmentTracker CompEquipmentTracker => equipmentTracker;
     public FacingDirection FacingDirection => CompMoveable != null ? CompMoveable.FacingDirection : default;
     public List<Vector2> Corners
     {
@@ -134,10 +138,13 @@ public class Thing : ITickable, IInteractable
 
         InitializeComps();
 
-        moveable        = GetComp<CompMoveable>();
-        pathFollower    = GetComp<CompPathFollower>();
-        jobs            = GetComp<CompPawnJobs>();
-        spawnState      = SpawnState.Unspawned;
+        moveable         = GetComp<CompMoveable>();
+        pathFollower     = GetComp<CompPathFollower>();
+        jobs             = GetComp<CompPawnJobs>();
+        equipmentTracker = GetComp<CompEquipmentTracker>();
+        container        = GetComp<CompContainer>();
+
+        spawnState       = SpawnState.Unspawned;
     }
 
     public void Spawn() 

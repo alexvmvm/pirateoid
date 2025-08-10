@@ -14,7 +14,7 @@ public abstract class JobTracker<IJobber, J> : ThingComp, IGUI, ITickable where 
     //Props
     public J CurJob => currentJob;
     public bool AnyJob => CurJob != null || jobs.Count > 0;
-    public int GUIOrder => GUIDrawOrder.Default;
+    public int GUIOrder => UIOrder.Default;
 
     void OnEnable()
     {

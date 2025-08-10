@@ -8,7 +8,7 @@ public class WindowManager : MonoBehaviour, IGUI
     private readonly List<Window> activeWindows = new();
 
     //Props
-    public int GUIOrder => global::GUIDrawOrder.Window;
+    public int GUIOrder => global::UIOrder.Window;
     public bool PauseGame
     {
         get

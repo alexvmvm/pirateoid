@@ -28,7 +28,7 @@ public class CompPawnJobs : ThingComp
     //Props
     public Job CurJob => currentJob;
     public bool AnyJob => CurJob != null || jobs.Count > 0;
-    public int GUIOrder => GUIDrawOrder.Default;
+    public int GUIOrder => UIOrder.Default;
 
     public void StartJob(Job job)
     {

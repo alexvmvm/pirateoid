@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96e642ad23d564d4987ff906baae82b8, type: 3}
-  m_Name: PistolShot
+  m_Name: Cutlas
   m_EditorClassIdentifier: 
-  label: pistol shot
-  size: {x: 0.2, y: 0.2}
+  label: cutlas
+  size: {x: 0.6, y: 0.6}
   graphicData:
-    sprite: {fileID: 21300000, guid: 5942ac03b5240264db0016a81d159640, type: 3}
+    sprite: {fileID: 21300000, guid: 293fd983d41c4ac4a9fbb6d17c2e4561, type: 3}
     scale: 1
-    brightness: 2
-  traversability: 1
-  thingType: 3
-  moveSpeed: 6
+    brightness: 1
+  traversability: 0
+  thingType: 0
+  moveSpeed: 2
   comps:
-  - rid: 8109864279253188628
-  - rid: 1264756240306405380
+  - rid: 1264756356396089344
   graphicBack:
     sprite: {fileID: 0}
     scale: 1
@@ -35,10 +34,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 1264756240306405380
-      type: {class: CompProperties_Moveable, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 8109864279253188628
-      type: {class: CompProperties_Projectile, ns: , asm: Assembly-CSharp}
+    - rid: 1264756356396089344
+      type: {class: CompProperties_Equipment, ns: , asm: Assembly-CSharp}
       data:
-        damage: 1
+        slot: 1

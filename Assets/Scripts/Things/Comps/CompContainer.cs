@@ -23,6 +23,7 @@ public class CompContainer : ThingComp, IThingOwner
     private List<Thing> contents = new();
 
     //Props
+    public CompProperties_Container Props => (CompProperties_Container)props;
     public IReadOnlyList<Thing> Contents => contents;
     public Thing OwnerThing => parent;
     public CompContainer OwningContainer => this;

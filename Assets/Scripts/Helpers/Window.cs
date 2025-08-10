@@ -20,7 +20,9 @@ public abstract class Window
 
     public virtual void DoWindow(Rect rect)
     {
-        UI.Box(rect, backgroundColor ?? UI.PanelBackgroundColor);
+        GUI.color = backgroundColor ?? UI.PanelBackgroundColor;
+        UI.Box(rect);
+        GUI.color = Color.white;
 
         if( doHeader )
         {

@@ -9,7 +9,7 @@ public class DebugMenu : MonoBehaviour, IGUI
     private const int BtnHeight = 12;
 
     //Props
-    public int GUIOrder => global::GUIDrawOrder.Window;
+    public int GUIOrder => global::UIOrder.Window;
 
     void OnEnable()
     {

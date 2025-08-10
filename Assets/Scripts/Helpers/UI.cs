@@ -106,7 +106,9 @@ public static class UI
 
     public static void Header(Rect rect, string text)
     {
-        Box(rect, HeaderBackgroundColor);
+        GUI.color = HeaderBackgroundColor;
+        Box(rect);
+        GUI.color = Color.white;
 
         Text.Anchor = TextAnchor.MiddleLeft;
         Text.Size = FontSize.Medium;
@@ -126,17 +128,17 @@ public static class UI
 
     public static void ProgressBar(Rect rect, float fill, Color? barColor = null, Color? backgroundColor = null)
     {
-        Box(rect, backgroundColor ?? Color.gray);
+        GUI.color = backgroundColor ?? Color.gray;
+        Box(rect);
         rect.SplitHorizontallyPercent(out Rect left, out Rect _, fill);
-        Box(left.ContractBy(1), barColor ?? Colors.SoftGreen);
+        GUI.color = barColor ?? Colors.SoftGreen;
+        Box(left.ContractBy(1));
+        GUI.color = Color.white;
     }
 
-    public static void Box(Rect rect, Color? color = null)
+    public static void Box(Rect rect)
     {        
-        var oldColor = GUI.color;
-        GUI.color = color ?? PanelBackgroundColor;
         DrawTexture(rect, WhiteTexture, ScaleMode.StretchToFill);
-        GUI.color = oldColor;
     }
 
     public static bool RadioButton(Rect rect)
@@ -180,7 +182,12 @@ public static class UI
     public static bool Button(Rect rect, Texture texture, bool background = false, bool active = false)
     {       
         if( background )
-            Box(rect, PanelBackgroundColor);
+        {
+            GUI.color = PanelBackgroundColor;
+            Box(rect);
+            GUI.color = Color.white;
+        }
+            
         
         DrawTexture(rect.ContractBy(GapSmall), texture, ScaleMode.ScaleToFit);
 
@@ -195,7 +202,9 @@ public static class UI
 
     public static bool Button(Rect rect, string label, bool active = true, Color? backgroundColor = null, Color? labelColor = null)
     {       
-        Box(rect, backgroundColor ?? PanelBackgroundColor);
+        GUI.color = backgroundColor ?? PanelBackgroundColor;
+        Box(rect);
+        GUI.color = Color.white;
 
         GUI.color = Color.gray;
         Border(rect);
@@ -318,7 +327,9 @@ public static class UI
 
     public static void Highlight(Rect rect)
     {
-        Box(rect, HighlightColor);
+        GUI.color = HighlightColor;
+        Box(rect);
+        GUI.color = Color.white;
     }
 
     public static string TextField(Rect rect, string value)
@@ -355,7 +366,9 @@ public static class UI
         Border(rect);
         GUI.color = colorBefore;
 
-        Box(rect, new Color(color.r, color.g, color.b, 0.1f));
+        GUI.color = new Color(color.r, color.g, color.b, 0.1f);
+        Box(rect);
+        GUI.color = Color.white;
 
         y += pad;
         TextRow(x + pad, ref y, width - (2 * pad), text);

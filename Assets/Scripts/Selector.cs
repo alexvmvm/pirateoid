@@ -15,7 +15,7 @@ public class Selector : MonoBehaviour, IGUI
     //Props
     public Thing ThingUnderMouse => thingUnderMouse;
 
-    public int GUIOrder => GUIDrawOrder.Default;
+    public int GUIOrder => UIOrder.Default;
 
     private List<Region> RegionsVisible
     {
