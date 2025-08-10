@@ -35,7 +35,7 @@ public class CompProjectile : ThingComp
 
     public void Fire(Vector2 direction)
     {
-        this.direction = direction;
+        this.direction = direction.normalized;
     }
 
     public override void Tick()

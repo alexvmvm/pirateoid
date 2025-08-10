@@ -110,6 +110,23 @@ public class Thing : ITickable, IInteractable
 
         }
     }
+    // --- Ownership ---
+    public CompContainer HeldContainer { get; private set; }    // null when on ground
+    public Thing ThingOwner => HeldContainer?.parent;            // convenience
+    public bool IsHeld => HeldContainer != null;
+    // <summary>Top-most owner (e.g., pawn that owns a backpack that holds this item).</summary>
+    public Thing RootOwner
+    {
+        get
+        {
+            var cur = this;
+            // walk up via owner chain to the top-most Thing
+            while (cur.ThingOwner != null && cur.ThingOwner != cur)
+                cur = cur.ThingOwner;
+            return cur;
+        }
+    }
+    public Vector2 PositionHeld => RootOwner.position;
 
     public void PostMake() 
     {
@@ -219,6 +236,16 @@ public class Thing : ITickable, IInteractable
                 }
             }
         }
+    }
+
+    internal void SetOwner(CompContainer container)
+    {
+        HeldContainer = container;
+    }
+
+    internal void ClearOwner()
+    {
+        HeldContainer = null;
     }
 
     public void Tick()

@@ -35,6 +35,12 @@ public class PlayerController : MonoBehaviour, ITickable
     public void Tick()
     {
         if( controllable != null )
-            controllable.HandlePlayerInput();   
+            controllable.HandleTickInput();   
+    }
+
+    void Update()
+    {
+        if( controllable != null )
+            controllable.HandleFrameInput(); 
     }
 }

@@ -1,9 +1,17 @@
 using System;
 using System.Collections.Generic;
 
+public enum EquipmentSlot
+{
+    None,
+    Weapon
+}
+
 [Serializable]
 public partial class CompProperties_Equipment : CompProperties
 {
+    public EquipmentSlot slot = default;
+
     public CompProperties_Equipment()
 	{
 		compClass = typeof(CompEquipment);
@@ -12,6 +20,8 @@ public partial class CompProperties_Equipment : CompProperties
 
 public class CompEquipment : ThingComp
 {
+    public CompProperties_Equipment Props => (CompProperties_Equipment)props;
+
     public CompEquipment(Thing parent) : base(parent)
     {
     }
@@ -30,7 +40,7 @@ public partial class CompProperties_Equipment
 {
     public override void DrawEditorFields()
     {
-        //capacity = UnityEditor.EditorGUILayout.IntField("Capacity", capacity);
+        slot = (EquipmentSlot)UnityEditor.EditorGUILayout.EnumPopup("Slot", slot);
     }
 }
 #endif

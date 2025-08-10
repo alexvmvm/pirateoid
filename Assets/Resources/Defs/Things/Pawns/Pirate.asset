@@ -22,12 +22,12 @@ MonoBehaviour:
   thingType: 2
   moveSpeed: 2
   comps:
-  - rid: 1264756240306405376
   - rid: 1264756240306405377
   - rid: 1264756240306405381
   - rid: 1264756349467099136
   - rid: 1264756349467099137
   - rid: 1264756349467099138
+  - rid: 1264756369848008704
   graphicBack:
     sprite: {fileID: 21300000, guid: 6ec84f6743157cc419abaf6a75af7f9c, type: 3}
     scale: 1
@@ -39,10 +39,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 1264756240306405376
-      type: {class: CompProperties_Container, ns: , asm: Assembly-CSharp}
-      data:
-        capacity: 10
     - rid: 1264756240306405377
       type: {class: CompProperties_Controllable, ns: , asm: Assembly-CSharp}
       data: 
@@ -57,9 +53,11 @@ MonoBehaviour:
       type: {class: CompProperties_PathFollower, ns: , asm: Assembly-CSharp}
       data:
         acceleration: 2
-        maxSpeed: 5
         decelerationDistance: 2
         stoppingDistance: 0.1
     - rid: 1264756349467099138
       type: {class: CompProperties_Jobs, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1264756369848008704
+      type: {class: CompProperties_EquipmentTracker, ns: , asm: Assembly-CSharp}
       data: 

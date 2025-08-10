@@ -22,6 +22,6 @@ public class Job_PickUp : Job
     public override IEnumerable<Toil> CreateToils()
     {
         yield return Toils.MoveTo(parent, target);
-        yield return Toils.PickUp(parent, target);
+        yield return Toils.PickUp(parent, target, tryEquip: true);
     }
 }

@@ -18,6 +18,7 @@ public class CompControllable : ThingComp
     private CompMoveable moveable;
     private CompPathFollower pathFollower;
     private CompPawnJobs jobs;
+    private CompEquipmentTracker equipment;
 
     public CompControllable(Thing parent) : base(parent)
     {
@@ -34,6 +35,7 @@ public class CompControllable : ThingComp
         moveable     = parent.GetComp<CompMoveable>();
         pathFollower = parent.GetComp<CompPathFollower>();
         jobs         = parent.GetComp<CompPawnJobs>();
+        equipment    = parent.GetComp<CompEquipmentTracker>();
     }
 
     public void SetControlled(bool control)
@@ -46,7 +48,7 @@ public class CompControllable : ThingComp
         }
     }
 
-    public void HandlePlayerInput()
+    public void HandleTickInput()
     {
         if( moveable != null )
         {
@@ -67,6 +69,30 @@ public class CompControllable : ThingComp
                 
                 moveable.Move(move);
             }
+        }
+    }
+
+    public void HandleFrameInput()
+    {
+        if( Input.GetKeyDown(KeyCode.Mouse0) )
+        {
+            if( equipment != null )
+            {
+                var weapon = equipment.EquippedWeapon;
+                if( weapon != null )
+                {   
+                    var shooter = weapon.GetComp<CompShooter>();
+                    if( shooter != null )
+                    {
+                        if( RaycastUtils.UIToMapPosition(Input.mousePosition, out Vector3 clickPos) )
+                        {
+                            var dir = ((Vector2)clickPos - parent.PositionHeld).normalized;
+
+                            shooter.ShootInDirection(dir);
+                        }
+                    }
+                }       
+            }  
         }
     }
 

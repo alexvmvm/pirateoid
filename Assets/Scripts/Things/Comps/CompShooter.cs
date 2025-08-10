@@ -25,15 +25,18 @@ public class CompShooter : ThingComp
 	{
 	}
 
+    public void ShootInDirection(Vector2 direction)
+    {        
+        var thing = ThingSpawner.SpawnThing(Props.projectile, parent.PositionHeld);
+        var projectile = thing.GetComp<CompProjectile>();
+        
+        projectile.Fire(direction);
+    }
+
     public override void Tick()
     {
-        if( parent.IsHashInterval(120) )
-        {
-            var thing = ThingSpawner.SpawnThing(Props.projectile, parent.position);
-            var projectile = thing.GetComp<CompProjectile>();
-            
-            projectile.Fire(Vector2.down);
-        }
+        // if( !parent.IsPlayerControlled() && parent.IsHashInterval(120) )
+        //     ShootInDirection(Vector2.down);
     }
 }
 

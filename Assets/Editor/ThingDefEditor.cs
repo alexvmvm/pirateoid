@@ -25,6 +25,9 @@ public class ThingDefEditor : Editor
             case ThingType.Building:
                 DoBuildingFields(def);
             break;
+            case ThingType.Projectile:
+                DoProjectileFields(def);
+            break;
         }
 
         DoCompsField(def);
@@ -46,6 +49,11 @@ public class ThingDefEditor : Editor
     private static void DoBuildingFields(ThingDef def)
     {
         def.traversability = (Traversability)EditorGUILayout.EnumPopup("Traversability", def.traversability);
+    }
+
+    private static void DoProjectileFields(ThingDef def)
+    {
+        def.moveSpeed = EditorGUILayout.FloatField("Move speed", def.moveSpeed);
     }
 
     private static void DoGraphicDataFields(string label, GraphicData graphicData)

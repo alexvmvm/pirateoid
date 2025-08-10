@@ -51,7 +51,7 @@ public static class Toils
         return toil;
     }
 
-    public static Toil PickUp(Thing pawn, Thing item)
+    public static Toil PickUp(Thing pawn, Thing item, bool tryEquip = false)
     {
         var toil = new Toil();
         
@@ -63,6 +63,13 @@ public static class Toils
             else
                 Debug.Log($"Tried to pick up {item} wihtout a way to store it.");
 
+            if( tryEquip )
+            {
+                var equipment = pawn.GetComp<CompEquipmentTracker>();
+                if( equipment != null && equipment.CanEquip(item) )
+                    equipment.Equip(item);
+            }
+            
             toil.Complete();
         };
 

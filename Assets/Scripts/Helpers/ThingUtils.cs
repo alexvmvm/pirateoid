@@ -23,4 +23,9 @@ public static class ThingUtils
             yield return interaction;
         }
     }
+
+    public static bool IsPlayerControlled(this Thing thing)
+    {
+        return Find.PlayerController.IsBeingControlled(thing);
+    }
 }

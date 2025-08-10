@@ -21,7 +21,9 @@ MonoBehaviour:
   traversability: 0
   thingType: 0
   moveSpeed: 2
-  comps: []
+  comps:
+  - rid: 1264756356396089344
+  - rid: 1264756369848008705
   graphicBack:
     sprite: {fileID: 0}
     scale: 1
@@ -32,4 +34,13 @@ MonoBehaviour:
     brightness: 1
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 1264756356396089344
+      type: {class: CompProperties_Equipment, ns: , asm: Assembly-CSharp}
+      data:
+        slot: 1
+    - rid: 1264756369848008705
+      type: {class: CompProperties_Shooter, ns: , asm: Assembly-CSharp}
+      data:
+        projectile: {fileID: 11400000, guid: bf656243d808651438c6bd43da091264, type: 2}
+        speed: 1
