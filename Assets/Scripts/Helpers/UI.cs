@@ -35,7 +35,7 @@ public static class UI
     public static readonly Color32 DebugColor = new(255, 154, 45, 255);
     public static readonly Color32 RedReadable = new (230, 41, 41, 255);
     public static readonly Color32 YellowReadable = new (230, 195, 41, 255);
-    public static readonly Color32 GreenReadable = new (70, 247, 133, 255);
+    public static readonly Color32 GreenReadable = new (88, 158, 30, 255);
     public static readonly Color32 GrayReadable = new(82, 81, 81, 255);
     public static readonly Color32 TextColorSubHeading = new(251, 248, 254, 255);
     public static readonly Texture2D PauseTexture = Resources.Load<Texture2D>("Textures/UI/pause");

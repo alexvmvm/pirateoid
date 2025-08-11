@@ -22,12 +22,7 @@ public abstract class ThingComp
 	public virtual void PostMake() 
     {
 	}
-
-	public virtual void TickBefore()
-	{
-		
-	}
-
+	
     public virtual void Tick()
     {
         
@@ -36,5 +31,10 @@ public abstract class ThingComp
 	public virtual void FrameUpdate()
 	{
 		
+	}
+
+	public virtual void DrawGizmos()
+	{
+
 	}
 }

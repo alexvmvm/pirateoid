@@ -41,8 +41,15 @@ public static class InventoryUIUtils
             
             var t = things[i];
 
+            if( equipment.IsEquipped(t) )
+            {
+                GUI.color = UI.GreenReadable;
+                UI.Border(r.ContractBy(2), thickness: 1);
+                GUI.color = Color.white;
+            }
+            
             GUI.color = Color.white * t.def.graphicData.brightness;
-            UI.DrawTexture(r.ContractBy(UI.Gap), t.def.graphicData.sprite.texture, ScaleMode.ScaleToFit);
+            UI.DrawTexture(r.ContractBy(UI.GapLarge), t.def.graphicData.sprite.texture, ScaleMode.ScaleToFit);
             GUI.color = Color.white;
 
             if( RootUI.IsKeyDown(IntToKeyCode(key)) )

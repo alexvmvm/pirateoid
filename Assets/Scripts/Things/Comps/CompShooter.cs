@@ -27,16 +27,34 @@ public class CompShooter : ThingComp
 
     public void ShootInDirection(Vector2 direction)
     {        
-        var thing = ThingSpawner.SpawnThing(Props.projectile, parent.PositionHeld);
+        var thing = ThingSpawner.SpawnThing(Props.projectile, GetShootOrigin());
         var projectile = thing.GetComp<CompProjectile>();
         
         projectile.Fire(direction);
     }
 
-    public override void Tick()
+    private Vector2 GetShootOrigin()
     {
-        // if( !parent.IsPlayerControlled() && parent.IsHashInterval(120) )
-        //     ShootInDirection(Vector2.down);
+        Vector3 pos = parent.DrawPos;
+
+        pos += parent.RootOwner.FacingDirection switch
+        {
+            FacingDirection.East => Vector3.right * (parent.def.size.x/2f),
+            FacingDirection.West => Vector3.left * (parent.def.size.x/2f),
+            _                    => Vector3.zero
+        };
+        
+        return pos;
+    }
+
+    public override void DrawGizmos()
+    {
+        base.DrawGizmos();
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(GetShootOrigin(), 0.15f);
+        Gizmos.DrawLine(parent.DrawPos, GetShootOrigin());
+        Gizmos.color = Color.white;
     }
 }
 

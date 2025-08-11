@@ -39,6 +39,7 @@ public class Thing : ITickable, IInteractable, IFrameUpdate
     private CompPawnJobs jobs;
     private CompEquipmentTracker equipmentTracker;
     private CompContainer container;
+    private CompEquipment equipment;
 
     //Props
     public int UniqueId => id;
@@ -48,6 +49,7 @@ public class Thing : ITickable, IInteractable, IFrameUpdate
     public CompPawnJobs CompJobs => jobs;
     public CompContainer CompContainer => container;
     public CompEquipmentTracker CompEquipmentTracker => equipmentTracker;
+    public CompEquipment CompEquipment => equipment;
     public FacingDirection FacingDirection => CompMoveable != null ? CompMoveable.FacingDirection : default;
     public List<Vector2> Corners
     {
@@ -70,10 +72,17 @@ public class Thing : ITickable, IInteractable, IFrameUpdate
     public Vector3 DrawPos
     {
         get
-        {
-            var offset = Find.CameraController.Mode == CameraMode.Perspective ? 
-                Find.Camera.transform.up * (def.size.y / 2f)  :
+        {         
+            Thing root = RootOwner;   
+            Vector2 size = root.def.size;
+            Vector3 position = root.position;
+
+            Vector3 offset = Find.CameraController.Mode == CameraMode.Perspective ? 
+                Find.Camera.transform.up * (size.y / 2f)  :
                 new Vector3();
+
+            if( equipment != null )
+                offset += equipment.GetEquipmentOffset(root.FacingDirection);
 
             return new Vector3(position.x, position.y, 0f) + offset;
         }
@@ -144,6 +153,7 @@ public class Thing : ITickable, IInteractable, IFrameUpdate
         jobs             = GetComp<CompPawnJobs>();
         equipmentTracker = GetComp<CompEquipmentTracker>();
         container        = GetComp<CompContainer>();
+        equipment        = GetComp<CompEquipment>();
 
         spawnState       = SpawnState.Unspawned;
     }
@@ -286,5 +296,18 @@ public class Thing : ITickable, IInteractable, IFrameUpdate
         }
 
         Profiler.EndSample();
+    }
+
+    public void DrawGizmos()
+    {
+        if( !comps.NullOrEmpty() )
+        {
+            for(var i = 0; i < comps.Count; i++)
+            {
+                comps[i].DrawGizmos();
+            }
+        }
+
+        Gizmos.DrawWireSphere(DrawPos, 0.1f);
     }
 }

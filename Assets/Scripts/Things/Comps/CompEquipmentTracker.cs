@@ -66,7 +66,7 @@ public class CompEquipmentTracker : ThingComp
             var container = parent.GetComp<CompContainer>();
             if( container == null )
             {
-                UnityEngine.Debug.LogError($"Tried to equip something to {parent} but this thing has no container.");
+                Debug.LogError($"Tried to equip something to {parent} but this thing has no container.");
                 return;    
             }
 

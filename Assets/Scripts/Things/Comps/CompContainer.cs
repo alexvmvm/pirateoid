@@ -43,6 +43,7 @@ public class CompContainer : ThingComp, IThingOwner
             if( thing.Spawned )
                 thing.DeSpawn();
 
+            thing.position = parent.position;
             thing.HeldContainer?.Remove(thing);
             contents.Add(thing);
             thing.SetOwner(this);
@@ -77,6 +78,17 @@ public class CompContainer : ThingComp, IThingOwner
 
     public override void Tick()
     {
+    }
+
+    public override void DrawGizmos()
+    {
+        if( !contents.NullOrEmpty() )
+        {
+            for(var i = 0; i < contents.Count; i++)
+            {
+                contents[i].DrawGizmos();
+            }
+        }
     }
 }
 

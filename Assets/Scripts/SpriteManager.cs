@@ -149,36 +149,9 @@ public class SpriteManager : MonoBehaviour
 
                 (GraphicData weaponData, bool _) = GetGraphicDataFor(thing.FacingDirection, weaponEq);
 
-                Vector3 weaponPos = GetEquipmentDrawPosition(weaponEq, thing.FacingDirection);
-
-                Vector3 eqOffset = Find.Camera.transform.forward * 0.0002f;
-
-                // z offset
-                weaponPos += thing.FacingDirection == FacingDirection.North ? eqOffset : -eqOffset;  
-
-                DrawSprite(weaponData.sprite, weaponPos, thing.rotation, weaponData.scale, weapon.def.size, mpb, spriteMaterial, flipped, weaponData.brightness);
+                DrawSprite(weaponData.sprite, weapon.DrawPos, thing.rotation, weaponData.scale, weapon.def.size, mpb, spriteMaterial, flipped, weaponData.brightness);
             }
         }
-    }
-
-    private static Vector3 GetEquipmentDrawPosition(CompEquipment equipment, FacingDirection facingDirection)
-    {
-        static Vector3 GetEquipmentOffset(Vector3 drawPos, FacingDirection facingDirection)
-        {
-            // direction
-            drawPos += facingDirection switch
-            {
-                FacingDirection.East => new Vector3(0.15f, -0.1f, 0f),
-                FacingDirection.West => new Vector3(-0.15f, -0.1f, 0f),
-                _                    => Vector3.zero
-            };
-
-            return drawPos;
-        }
-
-        Vector3 drawPos = equipment.parent.RootOwner.DrawPos;
-
-        return GetEquipmentOffset(drawPos, facingDirection);
     }
 
     private static void DrawSprite(Sprite sprite, Vector3 drawPos, float rot, float scale, Vector2 size, 

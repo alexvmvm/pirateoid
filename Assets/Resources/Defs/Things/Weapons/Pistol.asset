@@ -47,6 +47,7 @@ MonoBehaviour:
           sprite: {fileID: 21300000, guid: 3181f035ae85f7340b03b23f3c45965b, type: 3}
           scale: 1
           brightness: 1
+        eastOffset: {x: 0.15, y: -0.15, z: 0}
     - rid: 1264756369848008705
       type: {class: CompProperties_Shooter, ns: , asm: Assembly-CSharp}
       data:
