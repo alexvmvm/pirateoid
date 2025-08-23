@@ -12,48 +12,48 @@ public class NavManager : MonoBehaviour
     {
         Profiler.BeginSample("UpdateRegionNodes");
 
-        if( nodes == null )
-        {
-            var width  = Find.Map.width;
-            var height = Find.Map.height;
+        // if( nodes == null )
+        // {
+        //     var width  = Find.Map.width;
+        //     var height = Find.Map.height;
 
-            nodes = new bool[width * height];
-            indexer = new GridIndexer(width, height);
-        }
+        //     nodes = new bool[width * height];
+        //     indexer = new GridIndexer(width, height);
+        // }
 
-        var min = region.rect.min;
-        var max = region.rect.max;
+        // var min = region.rect.min;
+        // var max = region.rect.max;
 
-        static bool RegionThingContainsPoint(Region region, Vector2 p)
-        {
-            foreach(var thing in region.thingLister.AllThings)
-            {
-                if( thing.def.traversability != Traversability.Impassable )
-                    continue;
+        // static bool RegionThingContainsPoint(Region region, Vector2 p)
+        // {
+        //     foreach(var thing in region.thingLister.AllThings)
+        //     {
+        //         if( thing.def.traversability != Traversability.Impassable )
+        //             continue;
                 
-                if( thing.Contains(p) )
-                    return true;
-            }
+        //         if( thing.Contains(p) )
+        //             return true;
+        //     }
 
-            return false;
-        }
+        //     return false;
+        // }
 
-        for(var x = min.x; x < max.x; x++)
-        {
-            for(var y = min.y; y < max.y; y++)
-            {
-                var p = new Vector2Int(x, y);
+        // for(var x = min.x; x < max.x; x++)
+        // {
+        //     for(var y = min.y; y < max.y; y++)
+        //     {
+        //         var p = new Vector2Int(x, y);
 
-                var index = indexer.ToIndex(p);
+        //         var index = indexer.ToIndex(p);
                 
-                nodes[index] = false;
+        //         nodes[index] = false;
 
-                if( RegionThingContainsPoint(region, p.Center()) )
-                    continue;
+        //         if( RegionThingContainsPoint(region, p.Center()) )
+        //             continue;
 
-                nodes[index] = true;
-            }
-        }
+        //         nodes[index] = true;
+        //     }
+        // }
 
         Profiler.EndSample();
     }

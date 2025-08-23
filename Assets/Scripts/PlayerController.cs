@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour, ITickable, IGUI
     //Props
     public Thing ControlledThing => controllable?.parent;
     public int GUIOrder => UIOrder.Inventory;
+    private bool CanControlNow => !Find.World.Active;
 
     void OnEnable()
     {
@@ -37,18 +38,27 @@ public class PlayerController : MonoBehaviour, ITickable, IGUI
 
     public void Tick()
     {
+        if( !CanControlNow )
+            return;
+        
         if( controllable != null )
             controllable.HandleTickInput();   
     }
 
     void Update()
     {
+        if( !CanControlNow )
+            return;
+        
         if( controllable != null )
             controllable.HandleFrameInput(); 
     }
 
     public void DoGUI()
     {
+        if( !CanControlNow )
+            return;
+        
         const float Height = 35;
 
         var x = UI.Gap;

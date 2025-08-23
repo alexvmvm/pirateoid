@@ -112,6 +112,9 @@ public class SpriteManager : MonoBehaviour
 
     private void Update()
     {
+        if( Find.World.Active )
+            return;
+        
         Rect camBounds = Find.Camera.CalculateCameraScreenRect();
 
         mpb ??= new();
