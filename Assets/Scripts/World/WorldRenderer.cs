@@ -21,8 +21,6 @@ public class WorldRenderer : MonoBehaviour
     [Tooltip("Camera clear flags for the overworld camera")]
     public CameraClearFlags clearFlags = CameraClearFlags.Depth;
 
-    public bool Visible => orthoCam != null && orthoCam.gameObject.activeInHierarchy;
-
     // refs
     private World world;
 
@@ -82,17 +80,18 @@ public class WorldRenderer : MonoBehaviour
         orthoCam.gameObject.SetActive(false);
     }
 
-    public void ToggleVisible()
+    void OnEnable()
     {
-        if (!orthoCam) return;
-        orthoCam.gameObject.SetActive(!orthoCam.gameObject.activeSelf);
+        orthoCam.gameObject.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        orthoCam.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if( !Visible ) 
-            return;
-
         // Simple ortho view rect
         Rect view = CalculateViewRect(orthoCam); // world units
 

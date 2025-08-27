@@ -10,8 +10,10 @@ public class World : MonoBehaviour
 
     //Working vars 
     private Overworld overworld;
+    private WorldRenderer worldRenderer;
 
     //Props
+    public bool Visible => worldRenderer.enabled;
     public Overworld Overworld 
     { 
         get
@@ -21,6 +23,16 @@ public class World : MonoBehaviour
             
             return overworld;
         }
+    }
+
+    void Awake()
+    {
+        worldRenderer = GetComponent<WorldRenderer>();
+    }
+
+    public void ToggleVisible()
+    {
+        worldRenderer.enabled = !worldRenderer.enabled;
     }
 
     /// <summary>Ensure a world chunk at (cx,cy) has been generated.</summary>

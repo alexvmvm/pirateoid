@@ -21,7 +21,7 @@ public class MainButtons : MonoBehaviour, IGUI
         var rect = new Rect(UIScreen.Width - 50 - UI.Gap, UIScreen.Height - 20 - UI.Gap, 50, 20);
         if( UI.Button(rect, "World") )
         {
-            Find.WorldRenderer.ToggleVisible();
+            Find.World.ToggleVisible();
         }
     }
 }

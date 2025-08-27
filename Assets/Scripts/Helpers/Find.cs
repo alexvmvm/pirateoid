@@ -23,7 +23,6 @@ public static class Find
     public static PathFinder PathFinder             => GetObjectCached(ref pathFinder);
     public static FrameUpdate FrameUpdate           => GetObjectCached(ref frameUpdate);
     public static World World                       => GetObjectCached(ref world);
-    public static WorldRenderer WorldRenderer       => GetObjectCached(ref worldRenderer);
 
     //Props - misc
     public static TileMap TileMap                   => Map.TileMap;
@@ -50,7 +49,6 @@ public static class Find
     private static PathFinder pathFinder;
     private static FrameUpdate frameUpdate;
     private static World world;
-    private static WorldRenderer worldRenderer;
 
     public static void Reset()
     {
@@ -70,7 +68,7 @@ public static class Find
         reservations = null;
         pathFinder = null;
         frameUpdate = null;
-        worldRenderer = null;
+        world = null;
     }
     
     
