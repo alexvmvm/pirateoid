@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour, ITickable, IGUI
     //Props
     public Thing ControlledThing => controllable?.parent;
     public int GUIOrder => UIOrder.Inventory;
-    private bool CanControlNow => !Find.World.Active;
+    private bool CanControlNow => !Find.WorldRenderer.Visible;
 
     void OnEnable()
     {

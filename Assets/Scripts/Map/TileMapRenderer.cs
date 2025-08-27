@@ -49,7 +49,7 @@ public class TileRenderer : MonoBehaviour
 
     void Update()
     {
-        if( Find.World.Active )
+        if( Find.WorldRenderer.Visible )
             return;
         
         if (mainCam == null)

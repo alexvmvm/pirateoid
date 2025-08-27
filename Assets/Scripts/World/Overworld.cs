@@ -18,8 +18,6 @@ public class Overworld
                 chunks[x, y] = new WorldChunk();
     }
 
-    public bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < width && y < height;
-
     public ref WorldTile Get(int x, int y)
     {
         int cx = x / WorldChunk.Size, cy = y / WorldChunk.Size;
