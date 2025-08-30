@@ -540,6 +540,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1238664481}
   - component: {fileID: 1238664480}
+  - component: {fileID: 1238664483}
   - component: {fileID: 1238664482}
   m_Layer: 0
   m_Name: World
@@ -560,8 +561,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90aad4ba788be954cbe595bcff355bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 512
-  worldHeight: 512
+  worldWidth: 1024
+  worldHeight: 1024
   seed: 123456
 --- !u!4 &1238664481
 Transform:
@@ -585,7 +586,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1238664479}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: defa2c969a80ec745b5feb7053cbbd66, type: 3}
   m_Name: 
@@ -624,6 +625,20 @@ MonoBehaviour:
   overworldLayerName: Overworld
   orthoSize: 150
   clearFlags: 3
+--- !u!114 &1238664483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238664479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95182376f3a2a97448df4e9dc98e9a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  continentScale: 0.0075
+  continentThreshold: 0.6
 --- !u!1 &1744988172
 GameObject:
   m_ObjectHideFlags: 0

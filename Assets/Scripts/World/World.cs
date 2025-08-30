@@ -11,6 +11,7 @@ public class World : MonoBehaviour
     //Working vars 
     private Overworld overworld;
     private WorldRenderer worldRenderer;
+    private WorldNoise noise;
 
     //Props
     public bool Visible => worldRenderer.enabled;
@@ -19,7 +20,7 @@ public class World : MonoBehaviour
         get
         {
             if( overworld == null )
-                overworld = new Overworld(worldWidth, worldHeight, seed);
+                overworld = new Overworld(worldWidth, worldHeight);
             
             return overworld;
         }
@@ -28,6 +29,7 @@ public class World : MonoBehaviour
     void Awake()
     {
         worldRenderer = GetComponent<WorldRenderer>();
+        noise = GetComponent<WorldNoise>();
     }
 
     public void ToggleVisible()
@@ -39,13 +41,39 @@ public class World : MonoBehaviour
     public void EnsureChunk(int cx, int cy)
     {
         var chunk = Overworld.chunks[cx, cy];
-        if (!chunk.dirty)
+        if (chunk.dirty)
         {
-            OverworldGen.GenerateChunk(Overworld, cx, cy);
+            noise.GenerateChunk(Overworld, cx, cy, seed);
+            chunk.dirty = false;
+            
             // Note: No rendering/baking here—just pure data gen
         }
     }
 
     public bool InBoundsWorldTile(int x, int y)
         => x >= 0 && y >= 0 && x < Overworld.width && y < Overworld.height;
+
+    [ContextMenu("Regenerate")]
+    public void Regenerate()
+    {
+        var overWorld = Overworld;
+
+        for(var x = 0; x < overWorld.chunksX; x++)
+        {
+            for(var y = 0; y < overWorld.chunksY; y++)
+            {
+                overWorld.chunks[x, y].dirty = true;
+            }
+        }
+        
+        worldRenderer.ClearCache();
+    }
+
+    [ContextMenu("Regenerate (and seed)")]
+    public void RegenerateAndSeed()
+    {
+        seed = Random.Range(int.MinValue, int.MaxValue);
+        
+        Regenerate();
+    }
 }

@@ -3,13 +3,12 @@ using UnityEngine;
 public class Overworld
 {
     public readonly int width, height;           // world tiles
-    public readonly int seed;
     public readonly int chunksX, chunksY;
     public readonly WorldChunk[,] chunks;
 
-    public Overworld(int width, int height, int seed)
+    public Overworld(int width, int height)
     {
-        this.width = width; this.height = height; this.seed = seed;
+        this.width = width; this.height = height;
         chunksX = Mathf.CeilToInt(width  / (float)WorldChunk.Size);
         chunksY = Mathf.CeilToInt(height / (float)WorldChunk.Size);
         chunks = new WorldChunk[chunksX, chunksY];

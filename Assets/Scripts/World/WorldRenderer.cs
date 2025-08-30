@@ -228,4 +228,9 @@ public class WorldRenderer : MonoBehaviour
             default:                   return Color.magenta;
         }
     }
+
+    public void ClearCache()
+    {
+        chunkTex.Clear();
+    }
 }

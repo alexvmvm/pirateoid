@@ -15,7 +15,7 @@ public struct WorldTile
 public class WorldChunk
 {
     public const int Size = 128; // coarse tiles per chunk
-    public bool dirty;
+    public bool dirty = true;
     public readonly WorldTile[] tiles = new WorldTile[Size * Size];
 
     public ref WorldTile Get(int x, int y) => ref tiles[y * Size + x];
